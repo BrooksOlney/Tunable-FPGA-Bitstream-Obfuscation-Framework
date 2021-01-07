@@ -1,0 +1,109 @@
+.model demo0
+.inputs reset clk enable
+.outputs out[0] out[1] out[2] out[3]
+
+# g1 = out[0]~reg0
+.names g1 out[0]
+1 1
+
+# g2 = out[1]~reg0
+.names g2 out[1]
+1 1
+
+# g3 = out[2]~reg0
+.names g3 out[2]
+1 1
+
+# g4 = out[3]~reg0
+.names g4 out[3]
+1 1
+
+.names g5 g11
+0 1
+
+#g6 = out[0]~synth
+#g1 = out[0]~reg0
+.names g6 g11 g1 g12
+0-1 1
+11- 1
+
+#g1 = out[0]~reg0
+.latch g12 g1 fe clk 1
+
+#g6 = out[0]~synth
+#g2 = out[1]~reg0
+.names g6 g7 g2 g13
+0-1 1
+11- 1
+
+#g2 = out[1]~reg0
+.latch g13 g2 fe clk 0
+
+#g6 = out[0]~synth
+#g3 = out[2]~reg0
+.names g6 g8 g3 g14
+0-1 1
+11- 1
+
+#g3 = out[2]~reg0
+.latch g14 g3 re clk 2
+
+#g6 = out[0]~synth
+#g4 = out[3]~reg0
+.names g6 g10 g4 g15
+0-1 1
+11- 1
+
+#g4 = out[3]~reg0
+.latch g15 g4 re clk 2
+
+#g1 = out[0]~reg0
+#g5 = out~synth
+.names g1 reset g5
+10 1
+01 1
+11 1
+
+#g6 = out[0]~synth
+.names reset enable g6
+10 1
+01 1
+11 1
+
+#g1 = out[0]~reg0
+#g2 = out[1]~reg0
+#g7 = out~synth
+.names g1 g2 reset g7
+100 1
+010 1
+
+#g3 = out[2]~reg0
+#g1 = out[0]~reg0
+#g2 = out[1]~reg0
+#g8 = out~synth
+.names g3 g1 g2 reset g8
+1000 1
+1100 1
+1010 1
+0110 1
+
+#g1 = out[0]~reg0
+#g3 = out[2]~reg0
+#g9 = out~synth
+.names g1 g3 g9
+00 1
+10 1
+01 1
+
+#g4 = out[3]~reg0
+#g2 = out[1]~reg0
+#g9 = out~synth
+#g10 = out~synth
+.names reset g4 g2 g9 g10
+0100 1
+0010 1
+0101 1
+0111 1
+
+.end
+
