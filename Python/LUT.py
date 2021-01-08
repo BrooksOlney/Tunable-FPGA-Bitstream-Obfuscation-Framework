@@ -64,17 +64,17 @@ class LUT:
             ttEntry = ttEntry[:lutIdx] + keybit + ttEntry[lutIdx:]
             tt_sec[ttEntry] = ttVal
 
-        for i in range(len(hmacsub)):
-            q = ''.join("{:", str(self.numInputs), "b}")
+        for i in range(len(hmacSub)):
+            q = ''.join(["{:", str(self.numInputs), "b}"])
             ttLine = str(q).format(i)
 
-            ttLine = ttLine[:lutIdx] + incorrectKeybit + ttLine[lutIdx:]
+            ttLine = ''.join([ttLine[:lutIdx], incorrectKeybit, ttLine[lutIdx:]])
 
             if hmacSub[i] == minMaxterm:
                 tt_sec[ttLine] = minMaxterm
 
         self.tt = tt_sec
-        self.inputs.insert(lutIdx, ''.join("sk[", keyIdx, "]"))
+        self.inputs.insert(lutIdx, ''.join(["sk[", keyIdx, "]"]))
         self.numInputs += 1
         self.contentSize *= 2
 
@@ -219,7 +219,7 @@ class LUT:
 
                 if self.tt[i] == "0": continue
 
-                q = ''.join("{:", str(self.numInputs), "b}")
+                q = ''.join(["{:", str(self.numInputs), "b}"])
                 ttRow = str(q).format(i)
                 sop.append(genSOPline(self.inputs, ttRow))
                 
@@ -230,21 +230,91 @@ class LUT:
 
         return ''.join(sop)
 
+    def toPrimitive(self, manufacturer):
+        """ Generate LUT primitive output string for verilog - corresponding to manufacturer and the way
+            they instantiate primitives. Altera (Intel) for example requires us to reverse the truth table
+            of the LUT prior to outputting. 
+
+            Currently, I am unsure whether or not the Xilinx primitives work. When we published the paper, we
+            only included results gathered from targeting Altera boards. May need to revisit this in the future.
+
+        Args:
+            manufacturer ([string]): string telling which manufacturer specs to use
+
+        Returns:
+            [str] -- LUT primitive instantiation string for outputting to verilog file
+        """
+        sv = []
+        inputString = self.getInputString()
+        tt = self.expandTruthTable()
+        reversedTT = tt[::-1]
+
+        if manufacturer.upper() == "ALTERA" or manufacturer.upper() == "INTEL":
+            sv.append("\t{} lut_{} ({{{}}}}, {});\n", "lut_sub".format(self.ID, inputString, self.output))
+            sv.append("\tdefparam lut_{}.LUT_SIZE = {};\n".format(self.ID, self.numInputs))
+        
+            precision = "H" if len(reversedTT) >= 8 else "b"
+            content = BinToHex(reversedTT) if len(reversedTT) >= 8 else reversedTT
+            
+            sv.append("\tdefparam lut_{}.mask = {1}'{}{};\n".format(self.ID, precision, self.contentSize, content))
+
+        elif manufacturer.upper() == "XILINX" or manufacturer.upper() == "AMD":
+            
+            if self.numInputs <= 6:
+                sv.append("defparam U{}.INIT = {}'{}{};\n".format(self.ID, self.contentSize, ))
+
+                precision = "H" if len(tt) >= 8 else "b"
+                content = BinToHex(tt) if len(tt) >= 8 else tt
+
+                sv.append("\tLUT{} U{}(.O({}), ".format(self.numInputs, self.ID, self.output))
+
+                for i, lutInput in self.inputs[:-1]:
+                    sv.append(".I{}({}), ".format(i, lutInput))
+                
+                sv.append(".I{}({}));\n".format(self.numInputs - 1, self.inputs[-1]))
+            else:
+                sv.append(self.getSOP())                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+        
+        return ''.join(sv)
+
+    def getInputstring(self):
+        """ Generates csv string of the inputs for use in verilog files.
+
+        Returns:
+            [string]    
+        """
+        inputList = []
+        for i, lutInput in enumerate(self.inputs):
+            li = lutInput.split("~")
+            
+            if len(li) > 1:
+                sli = ''.join([li[0], "[", li[1], "]", li[2]])
+            else:
+                sli = li[0]
+            
+            inputList.append(sli)
+            if i != self.numInputs - 1:
+                inputList.append(", ")
+        
+        return ''.join(inputList)
+
+
 def genSOPline(inputs, ttLine):
     """ Take the list of primary LUT inputs and the tt line, and generate a LUT function statement.
 
-        i.e. => inputs = ['a', 'b', 'c'], ttline = "010" => returns "((!a) & (b) & (!c))" 
+        i.e. => inputs = ('a', 'b', 'c'), ttline = "010" => returns "((!a) & (b) & (!c))" 
 
     Args:
         inputs {[list(string)]}: list of LUT inputs
         ttLine {[str]}: binary string corresponding to input signal values
 
     Returns:
-        [type]: [description]
+        string: SOP line for given tt value
     """
+    sop = []
     sop.apppend("(")
 
-    for iIdx, lutInput in enumerate(self.inputs):
+    for i, lutInput in enumerate(inputs):
         li = lutInput.split('~')
 
         if len(li) > 1:
@@ -252,12 +322,12 @@ def genSOPline(inputs, ttLine):
         else:
             sli = li[0]
         
-        if ttLine[iIdx] == "1":
+        if ttLine[i] == "1":
             sop.append("({0})".format(li))
         else:
             sop.append("(!{0})".format(sli))
 
-        if i < NumInputs - 1:
+        if i < len(inputs) - 1:
             sop.append(" & ")
 
     sop.append(")")
@@ -272,7 +342,7 @@ def isMatchDontCare(ttGold, testRow):
         testRow {[str]} -- Row from other function to check as a match against ttGold
 
     Returns:
-        [boolean] -- indicates whether or not the given inputs are a functional match
+        boolean -- indicates whether or not the given inputs are a functional match
     """
     for i in range(len(ttGold)):
         if testRow[i] == "-":
@@ -281,3 +351,22 @@ def isMatchDontCare(ttGold, testRow):
             return False
     
     return True
+
+def BinToHex(binStr):
+    """ Helper function for converting binary string to hex string
+
+    Args:
+        binStr (str): binary string
+
+    Raises:
+        Exception: binStr cannot be packed into hex format
+
+    Returns:
+        str: hex string
+    """
+    if len(bin) % 8 != 0:
+        raise Exception("Length of binary in BinToHex() must be multiple of 8.")
+
+    h = '%0*X'.format((len(binStr) + 3) // 4, int(binStr, 2)) 
+
+    return h
