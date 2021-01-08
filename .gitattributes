@@ -2,3 +2,4 @@ C#/secblif/bin/* linguist-vendored
 C#/secblif/obj/* linguist-vendored
 C#/secblif/Properties/* linguist-vendored
 
+*.v linguist-vendored
