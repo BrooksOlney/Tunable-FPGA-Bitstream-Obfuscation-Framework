@@ -65,7 +65,7 @@ class LUT:
             tt_sec[ttEntry] = ttVal
 
         for i in range(len(hmacsub)):
-            q = "{:" + str(self.numInputs) + "b}"
+            q = ''.join("{:", str(self.numInputs), "b}")
             ttLine = str(q).format(i)
 
             ttLine = ttLine[:lutIdx] + incorrectKeybit + ttLine[lutIdx:]
@@ -76,6 +76,7 @@ class LUT:
         self.tt = tt_sec
         self.inputs.insert(lutIdx, ''.join("sk[", keyIdx, "]"))
         self.numInputs += 1
+        self.contentSize *= 2
 
 
     def addKeybit(self, keybit, keyIdx, lutIdx):
@@ -200,33 +201,68 @@ class LUT:
             mintermCount = 0
 
             for ttEntry, output in self.mintt.items():
-                if output is "0":
-                    continue
-                sop.append("(")
+                
+                if output == "0": continue
+                
+                sop.append(genSOPline(self.inputs, ttEntry))
+                mintermCount += 1
 
-                for i in range(self.numInputs):
-                    li = self.inputs[i].split('~')
-                    
-                    if len(li) > 1:
-                        sli = ''.join((li[0], "[", li[1], "]", li[2]))
-                    else:
-                        sli = li[0]
-                    
-                    if output is "1":
-                        sop.append("({0})".format(li))
-                    else:
-                        sop.append("(!{0})".format(sli))
-                    
-                    sop.append(")")
-                    mintermCount += 1
-                    if mintermCount < len(self.mintt):
-                        sop.append(" + ")
+                if mintermCount < len(self.mintt):
+                    sop.append(" + ")
 
                 sop.append(");")
 
         else:
             tt = self.expandTruthTable()
-            ttRow = list()
+
+            for i in range(self.contentSize):
+
+                if self.tt[i] == "0": continue
+
+                q = ''.join("{:", str(self.numInputs), "b}")
+                ttRow = str(q).format(i)
+                sop.append(genSOPline(self.inputs, ttRow))
+                
+                if i < self.contentSize - 1 and "1" in tt[i + 1:]:
+                    sop.append(" + ")
+            
+            sop.append(");")
+
+        return ''.join(sop)
+
+def genSOPline(inputs, ttLine):
+    """ Take the list of primary LUT inputs and the tt line, and generate a LUT function statement.
+
+        i.e. => inputs = ['a', 'b', 'c'], ttline = "010" => returns "((!a) & (b) & (!c))" 
+
+    Args:
+        inputs {[list(string)]}: list of LUT inputs
+        ttLine {[str]}: binary string corresponding to input signal values
+
+    Returns:
+        [type]: [description]
+    """
+    sop.apppend("(")
+
+    for iIdx, lutInput in enumerate(self.inputs):
+        li = lutInput.split('~')
+
+        if len(li) > 1:
+            sli = ''.join("[", li[1], "]")
+        else:
+            sli = li[0]
+        
+        if ttLine[iIdx] == "1":
+            sop.append("({0})".format(li))
+        else:
+            sop.append("(!{0})".format(sli))
+
+        if i < NumInputs - 1:
+            sop.append(" & ")
+
+    sop.append(")")
+
+    return ''.join(sop)
 
 def isMatchDontCare(ttGold, testRow):
     """ Helper function for comparing truth table entries - accounting for don't cares
@@ -239,7 +275,7 @@ def isMatchDontCare(ttGold, testRow):
         [boolean] -- indicates whether or not the given inputs are a functional match
     """
     for i in range(len(ttGold)):
-        if testRow[i] is "-":
+        if testRow[i] == "-":
             continue
         elif ttGold[i] != testRow[i]:
             return False
