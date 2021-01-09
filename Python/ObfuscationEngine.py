@@ -1,7 +1,8 @@
 import time as t
-import random as rnd
+import random
 import numpy as np
 import re
+from copy import deepcopy
 
 from LUT import LUT
 from Circuit import circuit
@@ -92,16 +93,55 @@ class ObfuscationEngine:
                 if str.isspace(line) or line.startswith("#") or "end" in line or len(line.split(' ')) == 2 or line == '': continue
                 print("Unsupported BLIF type @ line {}: {}".format(i, line))
                 
-        ckt = circuit(cktName, inputs, outputs, wires, regs, luts)
-        self.ckt = ckt        
+        ckt = circuit(cktName, inputs, outputs, wires, regs, luts)     
         end = t.time()
-
         print("BLIF parsing took {0:04f}s to complete.".format(end - start))
+        
+        return ckt 
     
+    def obfuscate(self, p):
+        """ Obfuscate a portion of the circuit. Size of the portion is adjusted by p.
+            Implements the obfuscation approach published in this paper:
+
+                B. Olney and R. Karam, "Tunable FPGA Bitstream Obfuscation with Boolean Satisfiability Attack Countermeasure"
+                ACM Trans. Des. Autom. Electron. Syst. 25, 2, Article 19 (March 2020), 22 pages. DOI:https://doi.org/10.1145/3373638
+
+        Args:
+            p (float): percentage of circuit to obfuscate.
+        """
+        if p <= 0 or p > 1: raise Exception("Invalid value for p. Must be in range: 0 < p <= 1")
+        self.cktObf = deepcopy(self.ckt)
+
+        self.cktObf.calculateWeights()
+        self.cktObf.LUTs.sort(key=lambda x: x.weight, reverse=True)
+
+        lutSizes = self.cktObf.getLUTsizeCount()
+        obfRange = int(p * len(self.cktObf.LUTs))
+
+        # partition the LUTs for obfuscation to prevent key explosion
+        subCkt = self.cktObf.LUTs[:obfRange]
+        lutParts = partitionLUTs(subCkt)
+
+        # generate random key
+        obfKey = [random.randint(0,1) for x in range(len(lutParts))]
+
+
+        for keybit, part in enumerate(lutParts):
+            for lut in part:
+                lutIdx = random.randint(0, lut.numInputs - 1)
+                
+
+        print("success!")
+
+    def partitionLUTs(self, luts):
+        partitions = []
+
+        return partitions
+
 # just testing for now
 def main():
-    blif = ObfuscationEngine(filename="F:\\Research\\Tunable_MUTARCH\\Python\\alu4.blif", vot="combinational", manufacturer="Altera")
-
+    alu4_oe = ObfuscationEngine(filename="F:\\Research\\Tunable_MUTARCH\\Python\\alu4.blif", vot="combinational", manufacturer="Altera")
+    alu4_oe.obfuscate(0.1)
 
 if __name__ == "__main__":
     main()

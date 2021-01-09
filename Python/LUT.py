@@ -29,7 +29,7 @@ class LUT:
 
         Arguments:
             tt_line {str} -- Binary string representing input minterm
-            output {str} -- Binary 1/0 corresponding to min/max-term expression
+            output  {str} -- Binary 1/0 corresponding to min/max-term expression
         """
         self.tt[tt_line] = output
         self.isMinimised = False
@@ -98,7 +98,7 @@ class LUT:
         # into tools like ABC and the SAT Attack 
         minMax = "0"
         for ttLine, output in self.tt.items():
-            if output is "1":
+            if output == "1":
                 minMax = "1"
 
         # build secured truth table with the correct keybit to preserve functionality
