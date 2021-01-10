@@ -16,21 +16,23 @@ class circuit:
         self.cktName  = cktName
         self.inputs   = inputs
         self.outputs  = outputs
-        self.cktWires = cktWires
-        self.cktRegs  = cktRegs
-        self.LUTs  = LUTs
-        self.sizeConstraint = max(lut.numInputs for lut in LUTs)
+        self.wires    = cktWires
+        self.regs     = cktRegs
+        self.luts     = LUTs
+        self.secured  = False
+        self.obfKey   = None
+        self.sizeLUT  = max(lut.numInputs for lut in LUTs)
     
     def calculateWeights(self):
         """ Compute the "weight" of each LUT which is used as a heuristic for certain obfuscation functions. 
             The weight of a LUT is simply its fanout, i.e. how many LUTs its output feeds into.
         """
 
-        for lut in self.LUTs:
-            lut.weight = sum(1 for _lut in self.LUTs if lut.output in _lut.inputs)
+        for lut in self.luts:
+            lut.weight = sum(1 for _lut in self.luts if lut.output in _lut.inputs)
             
     def getLUTsizeCount(self):
         """ Returns an array of integers corresponding to the number of LUTs of that size.
             i.e. if arr[5] == 10, then there are 10 5-LUTs in the circuit
         """
-        return [sum(1 for lut in self.LUTs if lut.numInputs == i) for i in range(1, self.sizeConstraint)]
+        return [sum(1 for lut in self.luts if lut.numInputs == i) for i in range(1, self.sizeLUT)]

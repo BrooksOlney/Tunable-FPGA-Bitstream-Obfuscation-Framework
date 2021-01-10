@@ -78,7 +78,6 @@ class LUT:
         self.numInputs += 1
         self.contentSize *= 2
 
-
     def addKeybit(self, keybit, keyIdx, lutIdx):
         """ Add keybit to input list, insert obfuscation function
 
@@ -88,10 +87,7 @@ class LUT:
             lutIdx {str} -- Index of the LUT inputs to insert the keybit
         """
         # determine what the reverse (incorrect) keybit is
-        if keybit is "0":
-            revKeybit = "1"
-        elif keybit is "1":
-            revKeybit = "0"
+        revKeybit = "1" if keybit == "0" else "0"
 
         # BLIF files sometimes mix min-/max-term function implementations
         # We must make sure to stick to one in our implementation for proper integration
@@ -103,12 +99,9 @@ class LUT:
 
         # build secured truth table with the correct keybit to preserve functionality
         ttSec = {}
-        while (len(self.tt) > 0):
-            ttEntry = self.tt.popitem()
-            ttLine = ttEntry[0]
-            ttOutput = ttEntry[1]
-
-            ttLine = ttLine[:lutIdx] + keybit + ttLine[lutIdx:]
+        while self.tt:
+            ttLine, ttOutput = self.tt.popitem()
+            ttLine = ''.join([ttLine[:lutIdx], keybit, ttLine[lutIdx:]])
             ttSec[ttLine] = ttOutput
 
         # add additional input (sk[keyidx])
@@ -126,7 +119,7 @@ class LUT:
                         continue
                     
                     # random don't care generation
-                    if rnd.randint(100) < 20:
+                    if rnd.randint(0, 100) < 20:
                         ttEntry[j] = "1"
                     else:
                         ttEntry[j] = "-"
@@ -135,7 +128,7 @@ class LUT:
                     ttEntry[lutIdx] = revKeybit
                     ttSec[''.join(ttEntry)] = minMax
         
-        self.inputs.insert(lutIdx, "sk[" + keyIdx + "]")
+        self.inputs.insert(lutIdx, ''.join(["sk[", str(keyIdx), "]"]))
         self.tt = ttSec
         self.secured = True
 
@@ -175,19 +168,14 @@ class LUT:
         for i in range(self.numInputs):
             li = self.inputs[i].split('~')
             if len(li) > 1:
-                sli = ''.join((li[0], "[", li[1], "]", li[2]))
+                sli = ''.join([li[0], "[", li[1], "]", li[2]])
             else:
                 sli = ''.join(li[0])
             
             inputList.append(sli)
 
-            if i != self.numInputs - 1:
-                inputList.append(", ")
-            
-        return ''.join(inputList)
+        return ', '.join(inputList)
 
-    # def getPLADesc(self):
-    
     def getSOP(self):
         """ Generate sum-of-products (SOP) expression of LUT functionality
 
@@ -217,16 +205,52 @@ class LUT:
 
             for i in range(self.contentSize):
 
-                if self.tt[i] == "0": continue
+                if tt[i] == "0": 
+                    continue
 
                 q = ''.join(["{:", str(self.numInputs), "b}"])
                 ttRow = str(q).format(i)
-                sop.append(genSOPline(self.inputs, ttRow))
+                sop.append(self.genSOPline(ttRow))
                 
                 if i < self.contentSize - 1 and "1" in tt[i + 1:]:
                     sop.append(" + ")
             
             sop.append(");")
+
+        return ''.join(sop)
+
+    def genSOPline(self, ttLine):
+        """ Take the list of primary LUT inputs and the tt line, and generate a LUT function statement.
+
+            i.e. => inputs = ('a', 'b', 'c'), ttline = "010" => returns "((!a) & (b) & (!c))" 
+
+        Args:
+            inputs {[list(string)]}: list of LUT inputs
+            ttLine {[str]}: binary string corresponding to input signal values
+
+        Returns:
+            string: SOP line for given tt value
+        """
+        sop = []
+        sop.append("(")
+
+        for i, lutInput in enumerate(self.inputs):
+            li = lutInput.split('~')
+
+            if len(li) > 1:
+                sli = ''.join(["[", li[1], "]"])
+            else:
+                sli = li[0]
+            
+            if ttLine[i] == "1":
+                sop.append("({})".format(sli))
+            else:
+                sop.append("(!{})".format(sli))
+
+            if i < self.numInputs - 1:
+                sop.append(" & ")
+
+        sop.append(")")
 
         return ''.join(sop)
 
@@ -293,46 +317,13 @@ class LUT:
                 sli = li[0]
             
             inputList.append(sli)
-            if i != self.numInputs - 1:
-                inputList.append(", ")
+
+        return ', '.join(inputList)
         
-        return ''.join(inputList)
 
-
-def genSOPline(inputs, ttLine):
-    """ Take the list of primary LUT inputs and the tt line, and generate a LUT function statement.
-
-        i.e. => inputs = ('a', 'b', 'c'), ttline = "010" => returns "((!a) & (b) & (!c))" 
-
-    Args:
-        inputs {[list(string)]}: list of LUT inputs
-        ttLine {[str]}: binary string corresponding to input signal values
-
-    Returns:
-        string: SOP line for given tt value
-    """
-    sop = []
-    sop.apppend("(")
-
-    for i, lutInput in enumerate(inputs):
-        li = lutInput.split('~')
-
-        if len(li) > 1:
-            sli = ''.join("[", li[1], "]")
-        else:
-            sli = li[0]
-        
-        if ttLine[i] == "1":
-            sop.append("({0})".format(li))
-        else:
-            sop.append("(!{0})".format(sli))
-
-        if i < len(inputs) - 1:
-            sop.append(" & ")
-
-    sop.append(")")
-
-    return ''.join(sop)
+    def compareLUT(self, lut):
+        return len(set(self.inputs) & set(lut.inputs))
+            
 
 def isMatchDontCare(ttGold, testRow):
     """ Helper function for comparing truth table entries - accounting for don't cares
