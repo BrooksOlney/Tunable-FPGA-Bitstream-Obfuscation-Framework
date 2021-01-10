@@ -97,7 +97,7 @@ def main():
     alu4_oe.obfuscate(1)
 
     Utils.writeVerilog("alu4.v", alu4_oe.ckt, "comb", "altera")
-    Utils.writeVerilog("alu4_s.v", alu4_oe.cktObf, "comb", "altera")
+    Utils.writeVerilog("alu4_s.v", alu4_oe.cktObf, "lutprim", "altera")
 
 if __name__ == "__main__":
     main()

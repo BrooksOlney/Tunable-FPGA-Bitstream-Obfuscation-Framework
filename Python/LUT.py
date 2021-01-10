@@ -274,18 +274,21 @@ class LUT:
         reversedTT = tt[::-1]
 
         if manufacturer.upper() == "ALTERA" or manufacturer.upper() == "INTEL":
-            sv.append("\t{} lut_{} ({{{}}}}, {});\n", "lut_sub".format(self.ID, inputString, self.output))
+            sv.append("\t{} lut_{} ({{{}}}, {});\n".format("lut_sub", self.ID, inputString, self.output))
             sv.append("\tdefparam lut_{}.LUT_SIZE = {};\n".format(self.ID, self.numInputs))
         
             precision = "H" if len(reversedTT) >= 8 else "b"
             content = BinToHex(reversedTT) if len(reversedTT) >= 8 else reversedTT
             
-            sv.append("\tdefparam lut_{}.mask = {1}'{}{};\n".format(self.ID, precision, self.contentSize, content))
+            sv.append("\tdefparam lut_{}.mask = {}'{}{};\n".format(self.ID, precision, self.contentSize, content))
 
         elif manufacturer.upper() == "XILINX" or manufacturer.upper() == "AMD":
             
             if self.numInputs <= 6:
-                sv.append("defparam U{}.INIT = {}'{}{};\n".format(self.ID, self.contentSize, ))
+                precision = "H" if len(tt) >= 8 else "b"
+                content = BinToHex(reversedTT) if len(reversedTT) >= 8 else tt
+
+                sv.append("defparam U{}.INIT = {}'{}{};\n".format(self.ID, self.contentSize, precision, content))
 
                 precision = "H" if len(tt) >= 8 else "b"
                 content = BinToHex(tt) if len(tt) >= 8 else tt
@@ -355,9 +358,9 @@ def BinToHex(binStr):
     Returns:
         str: hex string
     """
-    if len(bin) % 8 != 0:
+    if len(binStr) % 8 != 0:
         raise Exception("Length of binary in BinToHex() must be multiple of 8.")
 
-    h = '%0*X'.format((len(binStr) + 3) // 4, int(binStr, 2)) 
+    h = '%0*X' % ((len(binStr) + 3) // 4, int(binStr, 2)) 
 
     return h
