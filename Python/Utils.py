@@ -1,7 +1,7 @@
 import time as t
 from LUT import LUT
 from Circuit import circuit
-
+import functools
 
 def readBLIF(filename):
     """ Parse BLIF into circuit object
@@ -84,6 +84,69 @@ def readBLIF(filename):
     print("BLIF parsing took {0:04f}s to complete.".format(end - start))
     
     return ckt 
+
+def writeBLIF(filename, ckt):
+
+    blif = []
+
+    if ckt.secured:
+        blif.append("# Locked with Key = {}\n".format(ckt.obfKey))
+    
+    blif.append(".model {}\n".format(ckt.cktName))
+    
+    blif.append(".inputs ")
+    for nettype, nets in zip([".inputs ", ".outputs "], [ckt.inputs, ckt.outputs]):
+        blif.append(nettype)
+
+        for net in nets:
+            vecs = net.split('~')
+
+            # NOTE: use the bottom 2 encodings for the nets interchangeably for whatever you're doing
+            # I believe that ABC doesn't read brackets, which is why I had to use the first encoding.
+            # Otherwise, use the second encoding if you are using the BLIF for other purposes.
+            if len(vecs) > 1:
+                blif.append("{} ".format(''.join(vecs[0], vecs[1])))
+                # blif.append("{} ".format(''.join(vecs[0], "[", vecs[1], "]")))
+            else:
+                blif.append("{} ".format(net))
+
+        if ckt.secured and nettype == ".inputs ":
+            blif.append(' '.join([''.join(["sk", str(bit)]) for bit in range(len(ckt.obfKey))]))
+
+        blif.append("\n")
+    blif.append("\n")
+
+    ckt.luts.sort(key=lambda x: x.ID)
+
+    for lut in ckt.luts:
+        lutStr = []
+        lutStr.append(' '.join([".names", *map(functools.partial(decodeNet, blif=True), lut.inputs), decodeNet(lut.output)]))
+        
+        for minterm in lut.tt.items():
+            lutStr.append(' '.join([*minterm]))
+        
+        blif.append('\n'.join(lutStr))
+        blif.append("\n\n")
+
+    blif.append("\n")
+    blif.append(".end\n")
+
+    with open(filename, "w") as bliffile:
+        bliffile.write(''.join(blif))
+
+def decodeNet(net, blif=False):
+
+    nsplit = net.split("~")
+
+    if len(nsplit) > 1:
+        if blif:
+            ret = ''.join([nsplit[0], nsplit[1]])
+        else:
+            ret = ''.join([nsplit[0], "[", nsplit[1], "]"])
+    else:
+        ret = net
+
+    return ret
 
 def writeVerilog(filename, ckt, vot, manufacturer):
     """ Writes a circuit to a verilog file based on the type of verilog desired and manufacturer.

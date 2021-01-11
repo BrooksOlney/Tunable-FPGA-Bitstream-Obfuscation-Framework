@@ -74,7 +74,7 @@ class LUT:
                 tt_sec[ttLine] = minMaxterm
 
         self.tt = tt_sec
-        self.inputs.insert(lutIdx, ''.join(["sk[", keyIdx, "]"]))
+        self.inputs.insert(lutIdx, ''.join(["sk~", keyIdx, "~"]))
         self.numInputs += 1
         self.contentSize *= 2
 
@@ -128,7 +128,7 @@ class LUT:
                     ttEntry[lutIdx] = revKeybit
                     ttSec[''.join(ttEntry)] = minMax
         
-        self.inputs.insert(lutIdx, ''.join(["sk[", str(keyIdx), "]"]))
+        self.inputs.insert(lutIdx, ''.join(["sk~", str(keyIdx), "~"]))
         self.tt = ttSec
         self.secured = True
 
@@ -153,7 +153,6 @@ class LUT:
 
                 if isMatchDontCare(tt[i], ttRow):
                     expandedTT[i] = "1"
-
         
         return ''.join(expandedTT)
 
@@ -163,18 +162,7 @@ class LUT:
         Returns:
             [str] -- comma separated string of all inputs to the LUT in proper order
         """
-        inputList = list()
-
-        for i in range(self.numInputs):
-            li = self.inputs[i].split('~')
-            if len(li) > 1:
-                sli = ''.join([li[0], "[", li[1], "]", li[2]])
-            else:
-                sli = ''.join(li[0])
-            
-            inputList.append(sli)
-
-        return ', '.join(inputList)
+        return ', '.join([*map(decodeNet, self.inputs)])
 
     def getSOP(self):
         """ Generate sum-of-products (SOP) expression of LUT functionality
@@ -235,12 +223,7 @@ class LUT:
         sop.append("(")
 
         for i, lutInput in enumerate(self.inputs):
-            li = lutInput.split('~')
-
-            if len(li) > 1:
-                sli = ''.join(["[", li[1], "]"])
-            else:
-                sli = li[0]
+            sli = decodeNet(lutInput)
             
             if ttLine[i] == "1":
                 sop.append("({})".format(sli))
@@ -280,7 +263,7 @@ class LUT:
             precision = "H" if len(reversedTT) >= 8 else "b"
             content = BinToHex(reversedTT) if len(reversedTT) >= 8 else reversedTT
             
-            sv.append("\tdefparam lut_{}.mask = {}'{}{};\n".format(self.ID, precision, self.contentSize, content))
+            sv.append("\tdefparam lut_{}.mask = {}'{}{};\n".format(self.ID, self.contentSize, precision, content))
 
         elif manufacturer.upper() == "XILINX" or manufacturer.upper() == "AMD":
             
@@ -302,31 +285,36 @@ class LUT:
             else:
                 sv.append(self.getSOP())                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
         
-        return ''.join(sv)
-
-    def getInputstring(self):
-        """ Generates csv string of the inputs for use in verilog files.
-
-        Returns:
-            [string]    
-        """
-        inputList = []
-        for i, lutInput in enumerate(self.inputs):
-            li = lutInput.split("~")
-            
-            if len(li) > 1:
-                sli = ''.join([li[0], "[", li[1], "]", li[2]])
-            else:
-                sli = li[0]
-            
-            inputList.append(sli)
-
-        return ', '.join(inputList)
-        
+        return ''.join(sv) 
 
     def compareLUT(self, lut):
+        """ Compare 2 luts, output the number of inputs they share.
+
+        Args:
+            lut (LUT): lut to compare to
+
+        Returns:
+            int: number of inputs shared between this lut and the one to compare
+        """
         return len(set(self.inputs) & set(lut.inputs))
-            
+
+def decodeNet(net):
+    """ Decode a net's string. i.e. "abc~20~" => "abc[20]"
+
+    Args:
+        net (string): encoded net string
+
+    Returns:
+        string: decoded net string
+    """
+    nsplit = net.split("~")
+
+    if len(nsplit) > 1:
+        ret = ''.join([nsplit[0], "[", nsplit[1], "]"])
+    else:
+        ret = net
+
+    return ret
 
 def isMatchDontCare(ttGold, testRow):
     """ Helper function for comparing truth table entries - accounting for don't cares

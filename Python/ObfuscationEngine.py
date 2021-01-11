@@ -93,11 +93,12 @@ class ObfuscationEngine:
 
 # just testing for now
 def main():
-    alu4_oe = ObfuscationEngine(filename="F:\\Research\\Tunable_MUTARCH\\Python\\blifs\\alu4.blif", vot="combinational", manufacturer="Altera")
-    alu4_oe.obfuscate(1)
+    alu4_oe = ObfuscationEngine(filename="F:\\Research\\Tunable_MUTARCH\\Python\\blifs\\spla.blif", vot="combinational", manufacturer="Altera")
+    alu4_oe.obfuscate(0.1)
 
-    Utils.writeVerilog("alu4.v", alu4_oe.ckt, "comb", "altera")
-    Utils.writeVerilog("alu4_s.v", alu4_oe.cktObf, "lutprim", "altera")
+    # Utils.writeVerilog("alu4.v", alu4_oe.ckt, "comb", "altera")
+    Utils.writeBLIF("spla_s.blif", alu4_oe.cktObf)
+    # Utils.writeBLIF("alu4.blif", alu4_oe.cktObf)
 
 if __name__ == "__main__":
     main()
