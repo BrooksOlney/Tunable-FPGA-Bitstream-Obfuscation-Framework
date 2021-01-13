@@ -3,6 +3,8 @@ import random
 import numpy as np
 import re
 from copy import deepcopy
+import argparse
+import traceback
 
 from LUT import LUT
 from Circuit import circuit
@@ -22,7 +24,27 @@ class ObfuscationEngine:
         self.cktObf = None
         self.vot    = vot
         self.man    = manufacturer
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, tb):
+        if exc_type is not None:
+            traceback.print_exception(exc_type, exc_value, tb)
+            # return False # uncomment to pass exception through
+
+        return True
     
+    def writeVerilog(self, filename, ofilename):
+
+        Utils.writeVerilog(filename, self.ckt, self.vot, self.man)
+        Utils.writeVerilog(ofilename, self.cktObf, self.vot, self.man)
+
+    def writeBLIF(self, filename, ofilename):
+
+        Utils.writeBLIF(filename, self.ckt)
+        Utils.writeBLIF(filename, self.cktObf)
+
     def obfuscate(self, p):
         """ Obfuscate a portion of the circuit. Size of the portion is adjusted by p.
             Implements the obfuscation approach published in this paper:
@@ -62,6 +84,48 @@ class ObfuscationEngine:
         end = t.time()        
         print("Finished obfuscating design in {0:4f}s.".format(end - start))
 
+    def satResilience(self, numInputs=None, maxlutsize=None):
+        if numInputs  == None: numInputs  = len(self.ckt.inputs)
+        if maxlutsize == None: maxlutsize = self.ckt.sizeLUT
+
+        sID = max(i.ID for i in self.ckt.luts) + 1
+        satKey  = [str(random.randint(0,1)) for x in range(numInputs)]
+        sBit = len(self.ckt.obfKey) + 1 if self.ckt.secured else 0
+
+        keyStrs = [''.join(["sk~", str(keyIdx), "~"]) for keyIdx in range(sBit, sBit + numInputs)]
+        keyDict = {keyStr : satKeybit for keyStr, satKeybit in zip(keyStrs, satKey)}    
+
+        satModuleInputs = self.ckt.inputs[:numInputs]
+        
+        compKeyGroups = (list(self.chunkList(satKey, maxlutsize // 2)), list(self.chunkList(keyStrs, maxlutsize // 2)))
+        maskKeyGroups = (list(self.chunkList(satKey, maxlutsize)), list(self.chunkList(keyStrs, maxlutsize)))
+        compInputGroups = list(self.chunkList(satModuleInputs, maxlutsize // 2))
+
+        compLUTs = []
+        
+        compNum = 0
+        for keyComp, inComp in zip(compKeyGroups, compInputGroups):
+            lutInputs = [keyComp[0][:], inComp[:]]
+            lutOutput = ''.join(["satCompare", str(compNum)])
+
+            compLUT = LUT(sID, lutInputs, lutOutput)
+
+            for i in range(len(inComp)):
+                q = ''.join(["{:", str(numInputs // 2), "b}"])
+                ttLine = str(q).format(i) * 2
+                compLUT.addMinterm(ttLine, "1")
+            
+            compLUTs.append(compLUT)
+            compNum += 1
+            sID += 1
+
+
+        print("uh oh")
+
+    def chunkList(self, lst, n):
+        for i in range(0, len(lst), n):
+            yield lst[i:i + n]
+
     def partitionLUTs(self, luts, n):
         """ Partition the LUTs based on how many inputs are shared between them. Partitioning the LUTs
             is good because it helps prevent the key from becoming too large, and can improve overheads.
@@ -92,13 +156,30 @@ class ObfuscationEngine:
         return partitions
 
 # just testing for now
-def main():
-    alu4_oe = ObfuscationEngine(filename="F:\\Research\\Tunable_MUTARCH\\Python\\blifs\\spla.blif", vot="combinational", manufacturer="Altera")
-    alu4_oe.obfuscate(0.1)
+def main(args):
 
-    # Utils.writeVerilog("alu4.v", alu4_oe.ckt, "comb", "altera")
-    Utils.writeBLIF("spla_s.blif", alu4_oe.cktObf)
-    # Utils.writeBLIF("alu4.blif", alu4_oe.cktObf)
+    print(args)
+    with ObfuscationEngine(args.i, args.v, args.m) as oe:
+        
+        oe.obfuscate(args.op)
+        oe.writeVerilog(*args.vFiles)
+        if args.blif:
+            oe.writeBLIF(args.blif)
+
 
 if __name__ == "__main__":
-    main()
+    ap = argparse.ArgumentParser()
+    ap._action_groups.pop()
+    required = ap.add_argument_group('required arguments')
+    optional = ap.add_argument_group('optional arguments')
+    required.add_argument('-i', help="Input BLIF file: -i {ckt_name.blif}")
+    required.add_argument('-vFiles', help="Verilog output filenames: -vFiles ckt.v ckt_secured.v", type=str, nargs=2, required=True)
+    optional.add_argument('-op', help="Percentage of design to obfuscate: -op {float(0.0, 1.0]}", type=float, default=1.0)
+    optional.add_argument('-sat', help="Implement SAT Attack resilience for the circuit: -sat")
+    optional.add_argument('-blif', help="BLIF ouput filename: -blif {ckt_name.blif}")
+    required.add_argument('-m', help="FPGA manufacturer (for verilog primitives): -m {xilinx/altera}", required=True)
+    required.add_argument('-v', help="Verilog Output Type: -v {comb, lutprim}", required=True)
+
+    args = ap.parse_args()
+    main(args)
+

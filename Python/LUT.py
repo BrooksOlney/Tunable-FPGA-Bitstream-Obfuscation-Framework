@@ -278,8 +278,8 @@ class LUT:
 
                 sv.append("\tLUT{} U{}(.O({}), ".format(self.numInputs, self.ID, self.output))
 
-                for i, lutInput in self.inputs[:-1]:
-                    sv.append(".I{}({}), ".format(i, lutInput))
+                for i, lutInput in enumerate(self.inputs[:-1]):
+                    sv.append(".I{}({}), ".format(i, decodeNet(lutInput)))
                 
                 sv.append(".I{}({}));\n".format(self.numInputs - 1, self.inputs[-1]))
             else:
