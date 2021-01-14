@@ -124,9 +124,9 @@ This is an example of how to list things you need to use the software and how to
 
 Use this tool to obfuscate your FPGA IP cores by exporting them to BLIF format (for example from Quartus Prime II), and importing them as BLIF into the framework before applying custom obfuscation functions to varying portions of your hardware design. 
 
-To see a list of the command line arguments and possible values, run ```sh python ObfuscationEngine.py -h``` in your terminal. The output will look like this:
+To see a list of the command line arguments and possible values, run ```python ObfuscationEngine.py -h``` in your terminal. The output will look like this:
 
-```sh
+```
 python .\ObfuscationEngine.py -h
 usage: ObfuscationEngine.py [-h] [-i I] -vFiles VFILES VFILES [-op OP]
                             [-sat SAT] [-blif BLIF] -m M -v V
