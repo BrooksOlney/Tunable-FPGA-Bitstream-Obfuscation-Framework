@@ -1,0 +1,11 @@
+.model testmodel
+.inputs a 
+.outputs f
+
+.names a net f
+11 1
+10 1
+
+.latch a net re
+
+.end

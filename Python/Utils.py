@@ -1,6 +1,8 @@
 import time as t
+import re
 from LUT import LUT
 from Circuit import circuit
+from Latch import latch
 import functools
 
 def readBLIF(filename):
@@ -27,26 +29,27 @@ def readBLIF(filename):
     wires    = []
     regs     = []
     luts     = []
+    latches  = []
 
     # notes: signals can often just be of the format [1234], so we replace as ~1234~ to prevent issues
     # distinguishing [1234] from something like a[1234]...
     for i, line in enumerate(bliffile):
 
-        if "model" in line:
+        if ".model" in line:
             sl = line.split(' ')
             cktName = sl[1]
 
         # encode primary input/output circuit ports
-        elif "inputs" in line or "outputs" in line:
+        elif ".inputs" in line or ".outputs" in line:
             ports = [port.replace("[", "~").replace("]", "~") for port in line.split(' ')[1:]]
             
-            if "inputs" in line:
+            if ".inputs" in line:
                 inputs = ports
             else:
                 outputs = ports
         
         # encode LUT info into object
-        elif "names" in line:
+        elif ".names" in line:
 
             portList = line.split(' ')
             output = portList[-1]
@@ -74,12 +77,34 @@ def readBLIF(filename):
                     wires.append(wire)
 
             luts.append(newLUT)
-    
+
+        elif ".latch" in line:
+
+            latchTypes = ["fe", "re", "ah", "al", "as"]
+            portList = line.split(' ')[1:]
+            latchInput, latchOutput = portList[:2]
+            del portList[:2]
+            latchInit = None
+            latchControl = None
+            latchType = None
+
+            for port in portList:
+                if port in latchTypes:
+                    latchType = port
+                elif port == "1" or port == "0":
+                    latchInit = port
+                else:
+                    latchControl = port
+
+            newLatch = latch(latchInput, latchOutput, latchType, latchControl, latchInit)
+            latches.append(newLatch)
+
+
         else:
             if str.isspace(line) or line.startswith("#") or "end" in line or len(line.split(' ')) == 2 or line == '': continue
             raise Exception("Unsupported BLIF type @ line {}: {}".format(i, line))
             
-    ckt = circuit(cktName, inputs, outputs, wires, regs, luts)     
+    ckt = circuit(cktName, inputs, outputs, wires, regs, luts, latches)
     end = t.time()
     print("BLIF parsing took {0:04f}s to complete.".format(end - start))
     
@@ -230,6 +255,9 @@ def writeVerilog(filename, ckt, vot, manufacturer):
             vCode.append(";\n\n")
         
         elemsPerLine = 8
+
+    for latch in ckt.latches:
+        vCode.append(''.join(["\t", latch.toString(), "\n"]))
 
     vCode.append("\n")
 

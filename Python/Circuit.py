@@ -4,7 +4,7 @@ import numpy as np
 from LUT import LUT
 
 class circuit:
-    def __init__(self, cktName, inputs, outputs, cktWires, cktRegs, LUTs):
+    def __init__(self, cktName, inputs, outputs, cktWires, cktRegs, LUTs, latches):
         """ Circuit class constructor.
 
         Args:
@@ -19,6 +19,7 @@ class circuit:
         self.wires    = cktWires
         self.regs     = cktRegs
         self.luts     = LUTs
+        self.latches  = latches
         self.secured  = False
         self.obfKey   = None
         self.sizeLUT  = max(lut.numInputs for lut in LUTs)
