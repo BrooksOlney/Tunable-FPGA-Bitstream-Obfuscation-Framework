@@ -1,0 +1,867 @@
+.model VGAfinal
+.inputs rst clk
+.outputs rgb[0] rgb[1] rgb[2] rgb[3] rgb[4] rgb[5] rgb[6] rgb[7] rgb[8] rgb[9] rgb[10] rgb[11] href vsync
+
+.names gnd rgb[0]
+1 1
+.names gnd rgb[1]
+1 1
+.names gnd rgb[2]
+1 1
+.names gnd rgb[3]
+1 1
+.names gnd rgb[4]
+1 1
+.names gnd rgb[5]
+1 1
+.names gnd rgb[6]
+1 1
+.names gnd rgb[7]
+1 1
+# g33 = pixel_gen:pixel_gen_dev|WideOr0
+.names g33 rgb[8]
+0 1
+
+# g33 = pixel_gen:pixel_gen_dev|WideOr0
+.names g33 rgb[9]
+0 1
+
+# g33 = pixel_gen:pixel_gen_dev|WideOr0
+.names g33 rgb[10]
+0 1
+
+# g33 = pixel_gen:pixel_gen_dev|WideOr0
+.names g33 rgb[11]
+0 1
+
+#g52 = vga_sync:vga_sync_dev|vcount[8]
+#g54 = vga_sync:vga_sync_dev|vcount[7]
+#g56 = vga_sync:vga_sync_dev|vcount[6]
+#g58 = vga_sync:vga_sync_dev|vcount[5]
+#g1 = vga_sync:vga_sync_dev|LessThan8~synth
+.names g52 g54 g56 g58 g1
+1111 1
+
+#g1 = vga_sync:vga_sync_dev|LessThan8~synth
+#g60 = vga_sync:vga_sync_dev|vcount[9]
+#g2 = vga_sync:vga_sync_dev|LessThan8~synth
+.names g1 g60 g2
+00 0
+
+#g2 = vga_sync:vga_sync_dev|LessThan8~synth
+#g62 = vga_sync:vga_sync_dev|vcount[0]
+#g3 = vga_sync:vga_sync_dev|y_pxl[0]~synth
+.names g2 g62 g3
+00 0
+
+#g64 = vga_sync:vga_sync_dev|hcount[7]
+#g66 = vga_sync:vga_sync_dev|hcount[8]
+#g4 = vga_sync:vga_sync_dev|LessThan9~synth
+.names g64 g66 g4
+00 0
+
+#g4 = vga_sync:vga_sync_dev|LessThan9~synth
+#g68 = vga_sync:vga_sync_dev|hcount[9]
+#g5 = vga_sync:vga_sync_dev|LessThan9~synth
+.names g4 g68 g5
+11 1
+
+#g5 = vga_sync:vga_sync_dev|LessThan9~synth
+#g70 = vga_sync:vga_sync_dev|hcount[0]
+#g6 = vga_sync:vga_sync_dev|x_pxl[0]~synth
+.names g5 g70 g6
+00 0
+
+#g3 = vga_sync:vga_sync_dev|y_pxl[0]~synth
+#g6 = vga_sync:vga_sync_dev|x_pxl[0]~synth
+#g7 = pixel_gen:pixel_gen_dev|rgb~synth
+.names g3 g6 g7
+11 1
+
+#g2 = vga_sync:vga_sync_dev|LessThan8~synth
+#g72 = vga_sync:vga_sync_dev|vcount[1]
+#g8 = vga_sync:vga_sync_dev|y_pxl[1]~synth
+.names g2 g72 g8
+00 0
+
+#g5 = vga_sync:vga_sync_dev|LessThan9~synth
+#g74 = vga_sync:vga_sync_dev|hcount[1]
+#g9 = vga_sync:vga_sync_dev|x_pxl[1]~synth
+.names g5 g74 g9
+00 0
+
+#g8 = vga_sync:vga_sync_dev|y_pxl[1]~synth
+#g9 = vga_sync:vga_sync_dev|x_pxl[1]~synth
+#g10 = pixel_gen:pixel_gen_dev|rgb~synth
+.names g8 g9 g10
+11 1
+
+#g2 = vga_sync:vga_sync_dev|LessThan8~synth
+#g76 = vga_sync:vga_sync_dev|vcount[2]
+#g11 = vga_sync:vga_sync_dev|y_pxl[2]~synth
+.names g2 g76 g11
+00 0
+
+#g5 = vga_sync:vga_sync_dev|LessThan9~synth
+#g78 = vga_sync:vga_sync_dev|hcount[2]
+#g12 = vga_sync:vga_sync_dev|x_pxl[2]~synth
+.names g5 g78 g12
+00 0
+
+#g11 = vga_sync:vga_sync_dev|y_pxl[2]~synth
+#g12 = vga_sync:vga_sync_dev|x_pxl[2]~synth
+#g13 = pixel_gen:pixel_gen_dev|rgb~synth
+.names g11 g12 g13
+11 1
+
+#g2 = vga_sync:vga_sync_dev|LessThan8~synth
+#g80 = vga_sync:vga_sync_dev|vcount[3]
+#g14 = vga_sync:vga_sync_dev|y_pxl[3]~synth
+.names g2 g80 g14
+00 0
+
+#g5 = vga_sync:vga_sync_dev|LessThan9~synth
+#g82 = vga_sync:vga_sync_dev|hcount[3]
+#g15 = vga_sync:vga_sync_dev|x_pxl[3]~synth
+.names g5 g82 g15
+00 0
+
+#g14 = vga_sync:vga_sync_dev|y_pxl[3]~synth
+#g15 = vga_sync:vga_sync_dev|x_pxl[3]~synth
+#g16 = pixel_gen:pixel_gen_dev|rgb~synth
+.names g14 g15 g16
+11 1
+
+#g2 = vga_sync:vga_sync_dev|LessThan8~synth
+#g84 = vga_sync:vga_sync_dev|vcount[4]
+#g17 = vga_sync:vga_sync_dev|y_pxl[4]~synth
+.names g2 g84 g17
+00 0
+
+#g5 = vga_sync:vga_sync_dev|LessThan9~synth
+#g86 = vga_sync:vga_sync_dev|hcount[4]
+#g18 = vga_sync:vga_sync_dev|x_pxl[4]~synth
+.names g5 g86 g18
+00 0
+
+#g17 = vga_sync:vga_sync_dev|y_pxl[4]~synth
+#g18 = vga_sync:vga_sync_dev|x_pxl[4]~synth
+#g19 = pixel_gen:pixel_gen_dev|rgb~synth
+.names g17 g18 g19
+11 1
+
+#g58 = vga_sync:vga_sync_dev|vcount[5]
+#g60 = vga_sync:vga_sync_dev|vcount[9]
+#g20 = vga_sync:vga_sync_dev|y_pxl[5]~synth
+.names g58 g60 g20
+00 0
+
+#g5 = vga_sync:vga_sync_dev|LessThan9~synth
+#g88 = vga_sync:vga_sync_dev|hcount[5]
+#g21 = vga_sync:vga_sync_dev|x_pxl[5]~synth
+.names g5 g88 g21
+00 0
+
+#g20 = vga_sync:vga_sync_dev|y_pxl[5]~synth
+#g21 = vga_sync:vga_sync_dev|x_pxl[5]~synth
+#g22 = pixel_gen:pixel_gen_dev|rgb~synth
+.names g20 g21 g22
+11 1
+
+#g56 = vga_sync:vga_sync_dev|vcount[6]
+#g60 = vga_sync:vga_sync_dev|vcount[9]
+#g23 = vga_sync:vga_sync_dev|y_pxl[6]~synth
+.names g56 g60 g23
+00 0
+
+#g5 = vga_sync:vga_sync_dev|LessThan9~synth
+#g90 = vga_sync:vga_sync_dev|hcount[6]
+#g24 = vga_sync:vga_sync_dev|x_pxl[6]~synth
+.names g5 g90 g24
+00 0
+
+#g23 = vga_sync:vga_sync_dev|y_pxl[6]~synth
+#g24 = vga_sync:vga_sync_dev|x_pxl[6]~synth
+#g25 = pixel_gen:pixel_gen_dev|rgb~synth
+.names g23 g24 g25
+11 1
+
+#g54 = vga_sync:vga_sync_dev|vcount[7]
+#g60 = vga_sync:vga_sync_dev|vcount[9]
+#g26 = vga_sync:vga_sync_dev|y_pxl[7]~synth
+.names g54 g60 g26
+00 0
+
+#g5 = vga_sync:vga_sync_dev|LessThan9~synth
+#g64 = vga_sync:vga_sync_dev|hcount[7]
+#g27 = vga_sync:vga_sync_dev|x_pxl[7]~synth
+.names g5 g64 g27
+00 0
+
+#g26 = vga_sync:vga_sync_dev|y_pxl[7]~synth
+#g27 = vga_sync:vga_sync_dev|x_pxl[7]~synth
+#g28 = pixel_gen:pixel_gen_dev|rgb~synth
+.names g26 g27 g28
+11 1
+
+#g2 = vga_sync:vga_sync_dev|LessThan8~synth
+#g68 = vga_sync:vga_sync_dev|hcount[9]
+#g29 = pixel_gen:pixel_gen_dev|rgb~synth
+.names g2 g68 g29
+11 1
+
+#g52 = vga_sync:vga_sync_dev|vcount[8]
+#g60 = vga_sync:vga_sync_dev|vcount[9]
+#g30 = pixel_gen:pixel_gen_dev|rgb~synth
+.names g52 g60 g30
+00 0
+
+#g5 = vga_sync:vga_sync_dev|LessThan9~synth
+#g66 = vga_sync:vga_sync_dev|hcount[8]
+#g31 = vga_sync:vga_sync_dev|x_pxl[8]~synth
+.names g5 g66 g31
+00 0
+
+#g30 = pixel_gen:pixel_gen_dev|rgb~synth
+#g31 = vga_sync:vga_sync_dev|x_pxl[8]~synth
+#g32 = pixel_gen:pixel_gen_dev|rgb~synth
+.names g30 g31 g32
+11 1
+
+#g7 = pixel_gen:pixel_gen_dev|rgb~synth
+#g10 = pixel_gen:pixel_gen_dev|rgb~synth
+#g13 = pixel_gen:pixel_gen_dev|rgb~synth
+#g16 = pixel_gen:pixel_gen_dev|rgb~synth
+#g19 = pixel_gen:pixel_gen_dev|rgb~synth
+#g22 = pixel_gen:pixel_gen_dev|rgb~synth
+#g25 = pixel_gen:pixel_gen_dev|rgb~synth
+#g28 = pixel_gen:pixel_gen_dev|rgb~synth
+#g29 = pixel_gen:pixel_gen_dev|rgb~synth
+#g32 = pixel_gen:pixel_gen_dev|rgb~synth
+#g33 = pixel_gen:pixel_gen_dev|WideOr0
+.names g7 g10 g13 g16 g19 g22 g25 g28 g29 g32 g33
+0000000000 0
+
+#g36 = vga_sync:vga_sync_dev|clk_div
+#href = vga_sync:vga_sync_dev|href
+.latch g50 href re g36 2
+
+#g36 = vga_sync:vga_sync_dev|clk_div
+#vsync = vga_sync:vga_sync_dev|vsync
+.latch g51 vsync re g36 2
+
+.names g36 g126
+0 1
+
+#g36 = vga_sync:vga_sync_dev|clk_div
+.latch g126 g36 re clk 2
+
+#g62 = vga_sync:vga_sync_dev|vcount[0]
+#g72 = vga_sync:vga_sync_dev|vcount[1]
+#g37 = vga_sync:vga_sync_dev|LessThan3~synth
+.names g62 g72 g37
+00 0
+
+#g37 = vga_sync:vga_sync_dev|LessThan3~synth
+#g76 = vga_sync:vga_sync_dev|vcount[2]
+#g80 = vga_sync:vga_sync_dev|vcount[3]
+#g38 = vga_sync:vga_sync_dev|LessThan3~synth
+.names g37 g76 g80 g38
+111 0
+
+#g38 = vga_sync:vga_sync_dev|LessThan3~synth
+#g52 = vga_sync:vga_sync_dev|vcount[8]
+#g54 = vga_sync:vga_sync_dev|vcount[7]
+#g56 = vga_sync:vga_sync_dev|vcount[6]
+#g58 = vga_sync:vga_sync_dev|vcount[5]
+#g84 = vga_sync:vga_sync_dev|vcount[4]
+#g39 = vga_sync:vga_sync_dev|LessThan3~synth
+.names g38 g52 g54 g56 g58 g84 g39
+100000 1
+
+#g39 = vga_sync:vga_sync_dev|LessThan3~synth
+#g60 = vga_sync:vga_sync_dev|vcount[9]
+#g40 = vga_sync:vga_sync_dev|LessThan3~synth
+.names g39 g60 g40
+01 0
+
+#g40 = vga_sync:vga_sync_dev|LessThan3~synth
+#g64 = vga_sync:vga_sync_dev|hcount[7]
+#g66 = vga_sync:vga_sync_dev|hcount[8]
+#g68 = vga_sync:vga_sync_dev|hcount[9]
+#g70 = vga_sync:vga_sync_dev|hcount[0]
+#g74 = vga_sync:vga_sync_dev|hcount[1]
+#g78 = vga_sync:vga_sync_dev|hcount[2]
+#g82 = vga_sync:vga_sync_dev|hcount[3]
+#g86 = vga_sync:vga_sync_dev|hcount[4]
+#g88 = vga_sync:vga_sync_dev|hcount[5]
+#g90 = vga_sync:vga_sync_dev|hcount[6]
+#g41 = vga_sync:vga_sync_dev|always1~synth
+.names g40 g64 g66 g68 g70 g74 g78 g82 g86 g88 g90 g41
+10111111100 1
+
+#g40 = vga_sync:vga_sync_dev|LessThan3~synth
+#g41 = vga_sync:vga_sync_dev|always1~synth
+#g42 = vga_sync:vga_sync_dev|vcount[0]~synth
+.names g40 g41 g42
+10 1
+01 1
+
+#g70 = vga_sync:vga_sync_dev|hcount[0]
+#g74 = vga_sync:vga_sync_dev|hcount[1]
+#g78 = vga_sync:vga_sync_dev|hcount[2]
+#g82 = vga_sync:vga_sync_dev|hcount[3]
+#g86 = vga_sync:vga_sync_dev|hcount[4]
+#g43 = vga_sync:vga_sync_dev|LessThan1~synth
+.names g70 g74 g78 g82 g86 g43
+11111 0
+
+#g43 = vga_sync:vga_sync_dev|LessThan1~synth
+#g64 = vga_sync:vga_sync_dev|hcount[7]
+#g88 = vga_sync:vga_sync_dev|hcount[5]
+#g90 = vga_sync:vga_sync_dev|hcount[6]
+#g44 = vga_sync:vga_sync_dev|LessThan1~synth
+.names g43 g64 g88 g90 g44
+1000 1
+
+#g44 = vga_sync:vga_sync_dev|LessThan1~synth
+#g66 = vga_sync:vga_sync_dev|hcount[8]
+#g68 = vga_sync:vga_sync_dev|hcount[9]
+#g45 = vga_sync:vga_sync_dev|LessThan1~synth
+.names g44 g66 g68 g45
+011 0
+
+#g86 = vga_sync:vga_sync_dev|hcount[4]
+#g88 = vga_sync:vga_sync_dev|hcount[5]
+#g90 = vga_sync:vga_sync_dev|hcount[6]
+#g46 = vga_sync:vga_sync_dev|always2~synth
+.names g86 g88 g90 g46
+111 1
+
+#g70 = vga_sync:vga_sync_dev|hcount[0]
+#g74 = vga_sync:vga_sync_dev|hcount[1]
+#g78 = vga_sync:vga_sync_dev|hcount[2]
+#g82 = vga_sync:vga_sync_dev|hcount[3]
+#g47 = vga_sync:vga_sync_dev|always2~synth
+.names g70 g74 g78 g82 g47
+0000 1
+
+#g47 = vga_sync:vga_sync_dev|always2~synth
+#g86 = vga_sync:vga_sync_dev|hcount[4]
+#g48 = vga_sync:vga_sync_dev|always2~synth
+.names g47 g86 g48
+01 0
+
+#g48 = vga_sync:vga_sync_dev|always2~synth
+#g88 = vga_sync:vga_sync_dev|hcount[5]
+#g90 = vga_sync:vga_sync_dev|hcount[6]
+#g49 = vga_sync:vga_sync_dev|always2~synth
+.names g48 g88 g90 g49
+100 1
+
+#g46 = vga_sync:vga_sync_dev|always2~synth
+#g49 = vga_sync:vga_sync_dev|always2~synth
+#g64 = vga_sync:vga_sync_dev|hcount[7]
+#g66 = vga_sync:vga_sync_dev|hcount[8]
+#g68 = vga_sync:vga_sync_dev|hcount[9]
+#g50 = vga_sync:vga_sync_dev|always2~synth
+.names g46 g49 g64 g66 g68 g50
+00101 0
+
+#g52 = vga_sync:vga_sync_dev|vcount[8]
+#g54 = vga_sync:vga_sync_dev|vcount[7]
+#g56 = vga_sync:vga_sync_dev|vcount[6]
+#g58 = vga_sync:vga_sync_dev|vcount[5]
+#g60 = vga_sync:vga_sync_dev|vcount[9]
+#g62 = vga_sync:vga_sync_dev|vcount[0]
+#g72 = vga_sync:vga_sync_dev|vcount[1]
+#g76 = vga_sync:vga_sync_dev|vcount[2]
+#g80 = vga_sync:vga_sync_dev|vcount[3]
+#g84 = vga_sync:vga_sync_dev|vcount[4]
+#g51 = vga_sync:vga_sync_dev|always2~synth
+.names g52 g54 g56 g58 g60 g62 g72 g76 g80 g84 g51
+1111011010 0
+
+#g42 = vga_sync:vga_sync_dev|vcount[0]~synth
+#g52 = vga_sync:vga_sync_dev|vcount[8]
+.names g42 g53 g52 g127
+1-1 1
+01- 1
+
+#g36 = vga_sync:vga_sync_dev|clk_div
+#g52 = vga_sync:vga_sync_dev|vcount[8]
+.latch g127 g52 re g36 2
+
+#g41 = vga_sync:vga_sync_dev|always1~synth
+#g92 = vga_sync:vga_sync_dev|Add1
+#g53 = vga_sync:vga_sync_dev|vcount[8]~synth
+.names g41 g92 g53
+11 1
+
+#g42 = vga_sync:vga_sync_dev|vcount[0]~synth
+#g54 = vga_sync:vga_sync_dev|vcount[7]
+.names g42 g55 g54 g128
+1-1 1
+01- 1
+
+#g36 = vga_sync:vga_sync_dev|clk_div
+#g54 = vga_sync:vga_sync_dev|vcount[7]
+.latch g128 g54 re g36 2
+
+#g41 = vga_sync:vga_sync_dev|always1~synth
+#g94 = vga_sync:vga_sync_dev|Add1
+#g55 = vga_sync:vga_sync_dev|vcount[7]~synth
+.names g41 g94 g55
+11 1
+
+#g42 = vga_sync:vga_sync_dev|vcount[0]~synth
+#g56 = vga_sync:vga_sync_dev|vcount[6]
+.names g42 g57 g56 g129
+1-1 1
+01- 1
+
+#g36 = vga_sync:vga_sync_dev|clk_div
+#g56 = vga_sync:vga_sync_dev|vcount[6]
+.latch g129 g56 re g36 2
+
+#g41 = vga_sync:vga_sync_dev|always1~synth
+#g96 = vga_sync:vga_sync_dev|Add1
+#g57 = vga_sync:vga_sync_dev|vcount[6]~synth
+.names g41 g96 g57
+11 1
+
+#g42 = vga_sync:vga_sync_dev|vcount[0]~synth
+#g58 = vga_sync:vga_sync_dev|vcount[5]
+.names g42 g59 g58 g130
+1-1 1
+01- 1
+
+#g36 = vga_sync:vga_sync_dev|clk_div
+#g58 = vga_sync:vga_sync_dev|vcount[5]
+.latch g130 g58 re g36 2
+
+#g41 = vga_sync:vga_sync_dev|always1~synth
+#g98 = vga_sync:vga_sync_dev|Add1
+#g59 = vga_sync:vga_sync_dev|vcount[5]~synth
+.names g41 g98 g59
+11 1
+
+#g42 = vga_sync:vga_sync_dev|vcount[0]~synth
+#g60 = vga_sync:vga_sync_dev|vcount[9]
+.names g42 g61 g60 g131
+1-1 1
+01- 1
+
+#g36 = vga_sync:vga_sync_dev|clk_div
+#g60 = vga_sync:vga_sync_dev|vcount[9]
+.latch g131 g60 re g36 2
+
+#g41 = vga_sync:vga_sync_dev|always1~synth
+#g100 = vga_sync:vga_sync_dev|Add1
+#g61 = vga_sync:vga_sync_dev|vcount[9]~synth
+.names g41 g100 g61
+11 1
+
+#g42 = vga_sync:vga_sync_dev|vcount[0]~synth
+#g62 = vga_sync:vga_sync_dev|vcount[0]
+.names g42 g63 g62 g132
+1-1 1
+01- 1
+
+#g36 = vga_sync:vga_sync_dev|clk_div
+#g62 = vga_sync:vga_sync_dev|vcount[0]
+.latch g132 g62 re g36 2
+
+#g41 = vga_sync:vga_sync_dev|always1~synth
+#g62 = vga_sync:vga_sync_dev|vcount[0]
+#g63 = vga_sync:vga_sync_dev|vcount[0]~synth
+.names g41 g62 g63
+10 1
+
+#g36 = vga_sync:vga_sync_dev|clk_div
+#g64 = vga_sync:vga_sync_dev|hcount[7]
+.latch g65 g64 re g36 2
+
+#g45 = vga_sync:vga_sync_dev|LessThan1~synth
+#g101 = vga_sync:vga_sync_dev|Add0
+#g65 = vga_sync:vga_sync_dev|hcount[7]~synth
+.names g45 g101 g65
+11 1
+
+#g36 = vga_sync:vga_sync_dev|clk_div
+#g66 = vga_sync:vga_sync_dev|hcount[8]
+.latch g67 g66 re g36 2
+
+#g45 = vga_sync:vga_sync_dev|LessThan1~synth
+#g103 = vga_sync:vga_sync_dev|Add0
+#g67 = vga_sync:vga_sync_dev|hcount[8]~synth
+.names g45 g103 g67
+11 1
+
+#g36 = vga_sync:vga_sync_dev|clk_div
+#g68 = vga_sync:vga_sync_dev|hcount[9]
+.latch g69 g68 re g36 2
+
+#g45 = vga_sync:vga_sync_dev|LessThan1~synth
+#g105 = vga_sync:vga_sync_dev|Add0
+#g69 = vga_sync:vga_sync_dev|hcount[9]~synth
+.names g45 g105 g69
+11 1
+
+#g36 = vga_sync:vga_sync_dev|clk_div
+#g70 = vga_sync:vga_sync_dev|hcount[0]
+.latch g71 g70 re g36 2
+
+#g45 = vga_sync:vga_sync_dev|LessThan1~synth
+#g70 = vga_sync:vga_sync_dev|hcount[0]
+#g71 = vga_sync:vga_sync_dev|hcount[0]~synth
+.names g45 g70 g71
+10 1
+
+#g42 = vga_sync:vga_sync_dev|vcount[0]~synth
+#g72 = vga_sync:vga_sync_dev|vcount[1]
+.names g42 g73 g72 g133
+1-1 1
+01- 1
+
+#g36 = vga_sync:vga_sync_dev|clk_div
+#g72 = vga_sync:vga_sync_dev|vcount[1]
+.latch g133 g72 re g36 2
+
+#g41 = vga_sync:vga_sync_dev|always1~synth
+#g106 = vga_sync:vga_sync_dev|Add1
+#g73 = vga_sync:vga_sync_dev|vcount[1]~synth
+.names g41 g106 g73
+11 1
+
+#g36 = vga_sync:vga_sync_dev|clk_div
+#g74 = vga_sync:vga_sync_dev|hcount[1]
+.latch g75 g74 re g36 2
+
+#g45 = vga_sync:vga_sync_dev|LessThan1~synth
+#g108 = vga_sync:vga_sync_dev|Add0
+#g75 = vga_sync:vga_sync_dev|hcount[1]~synth
+.names g45 g108 g75
+11 1
+
+#g42 = vga_sync:vga_sync_dev|vcount[0]~synth
+#g76 = vga_sync:vga_sync_dev|vcount[2]
+.names g42 g77 g76 g134
+1-1 1
+01- 1
+
+#g36 = vga_sync:vga_sync_dev|clk_div
+#g76 = vga_sync:vga_sync_dev|vcount[2]
+.latch g134 g76 re g36 2
+
+#g41 = vga_sync:vga_sync_dev|always1~synth
+#g110 = vga_sync:vga_sync_dev|Add1
+#g77 = vga_sync:vga_sync_dev|vcount[2]~synth
+.names g41 g110 g77
+11 1
+
+#g36 = vga_sync:vga_sync_dev|clk_div
+#g78 = vga_sync:vga_sync_dev|hcount[2]
+.latch g79 g78 re g36 2
+
+#g45 = vga_sync:vga_sync_dev|LessThan1~synth
+#g112 = vga_sync:vga_sync_dev|Add0
+#g79 = vga_sync:vga_sync_dev|hcount[2]~synth
+.names g45 g112 g79
+11 1
+
+#g42 = vga_sync:vga_sync_dev|vcount[0]~synth
+#g80 = vga_sync:vga_sync_dev|vcount[3]
+.names g42 g81 g80 g135
+1-1 1
+01- 1
+
+#g36 = vga_sync:vga_sync_dev|clk_div
+#g80 = vga_sync:vga_sync_dev|vcount[3]
+.latch g135 g80 re g36 2
+
+#g41 = vga_sync:vga_sync_dev|always1~synth
+#g114 = vga_sync:vga_sync_dev|Add1
+#g81 = vga_sync:vga_sync_dev|vcount[3]~synth
+.names g41 g114 g81
+11 1
+
+#g36 = vga_sync:vga_sync_dev|clk_div
+#g82 = vga_sync:vga_sync_dev|hcount[3]
+.latch g83 g82 re g36 2
+
+#g45 = vga_sync:vga_sync_dev|LessThan1~synth
+#g116 = vga_sync:vga_sync_dev|Add0
+#g83 = vga_sync:vga_sync_dev|hcount[3]~synth
+.names g45 g116 g83
+11 1
+
+#g42 = vga_sync:vga_sync_dev|vcount[0]~synth
+#g84 = vga_sync:vga_sync_dev|vcount[4]
+.names g42 g85 g84 g136
+1-1 1
+01- 1
+
+#g36 = vga_sync:vga_sync_dev|clk_div
+#g84 = vga_sync:vga_sync_dev|vcount[4]
+.latch g136 g84 re g36 2
+
+#g41 = vga_sync:vga_sync_dev|always1~synth
+#g118 = vga_sync:vga_sync_dev|Add1
+#g85 = vga_sync:vga_sync_dev|vcount[4]~synth
+.names g41 g118 g85
+11 1
+
+#g36 = vga_sync:vga_sync_dev|clk_div
+#g86 = vga_sync:vga_sync_dev|hcount[4]
+.latch g87 g86 re g36 2
+
+#g45 = vga_sync:vga_sync_dev|LessThan1~synth
+#g120 = vga_sync:vga_sync_dev|Add0
+#g87 = vga_sync:vga_sync_dev|hcount[4]~synth
+.names g45 g120 g87
+11 1
+
+#g36 = vga_sync:vga_sync_dev|clk_div
+#g88 = vga_sync:vga_sync_dev|hcount[5]
+.latch g89 g88 re g36 2
+
+#g45 = vga_sync:vga_sync_dev|LessThan1~synth
+#g122 = vga_sync:vga_sync_dev|Add0
+#g89 = vga_sync:vga_sync_dev|hcount[5]~synth
+.names g45 g122 g89
+11 1
+
+#g36 = vga_sync:vga_sync_dev|clk_div
+#g90 = vga_sync:vga_sync_dev|hcount[6]
+.latch g91 g90 re g36 2
+
+#g45 = vga_sync:vga_sync_dev|LessThan1~synth
+#g124 = vga_sync:vga_sync_dev|Add0
+#g91 = vga_sync:vga_sync_dev|hcount[6]~synth
+.names g45 g124 g91
+11 1
+
+#g52 = vga_sync:vga_sync_dev|vcount[8]
+#g95 = vga_sync:vga_sync_dev|Add1~synth
+#g92 = vga_sync:vga_sync_dev|Add1
+.names g52 g95 g92
+10 1
+01 1
+
+#g52 = vga_sync:vga_sync_dev|vcount[8]
+#g95 = vga_sync:vga_sync_dev|Add1~synth
+#g93 = vga_sync:vga_sync_dev|Add1~synth
+.names g52 g95 g93
+11 1
+
+#g54 = vga_sync:vga_sync_dev|vcount[7]
+#g97 = vga_sync:vga_sync_dev|Add1~synth
+#g94 = vga_sync:vga_sync_dev|Add1
+.names g54 g97 g94
+10 1
+01 1
+
+#g54 = vga_sync:vga_sync_dev|vcount[7]
+#g97 = vga_sync:vga_sync_dev|Add1~synth
+#g95 = vga_sync:vga_sync_dev|Add1~synth
+.names g54 g97 g95
+11 1
+
+#g56 = vga_sync:vga_sync_dev|vcount[6]
+#g99 = vga_sync:vga_sync_dev|Add1~synth
+#g96 = vga_sync:vga_sync_dev|Add1
+.names g56 g99 g96
+10 1
+01 1
+
+#g56 = vga_sync:vga_sync_dev|vcount[6]
+#g99 = vga_sync:vga_sync_dev|Add1~synth
+#g97 = vga_sync:vga_sync_dev|Add1~synth
+.names g56 g99 g97
+11 1
+
+#g58 = vga_sync:vga_sync_dev|vcount[5]
+#g119 = vga_sync:vga_sync_dev|Add1~synth
+#g98 = vga_sync:vga_sync_dev|Add1
+.names g58 g119 g98
+10 1
+01 1
+
+#g58 = vga_sync:vga_sync_dev|vcount[5]
+#g119 = vga_sync:vga_sync_dev|Add1~synth
+#g99 = vga_sync:vga_sync_dev|Add1~synth
+.names g58 g119 g99
+11 1
+
+#g60 = vga_sync:vga_sync_dev|vcount[9]
+#g93 = vga_sync:vga_sync_dev|Add1~synth
+#g100 = vga_sync:vga_sync_dev|Add1
+.names g60 g93 g100
+10 1
+01 1
+
+#g64 = vga_sync:vga_sync_dev|hcount[7]
+#g125 = vga_sync:vga_sync_dev|Add0~synth
+#g101 = vga_sync:vga_sync_dev|Add0
+.names g64 g125 g101
+10 1
+01 1
+
+#g64 = vga_sync:vga_sync_dev|hcount[7]
+#g125 = vga_sync:vga_sync_dev|Add0~synth
+#g102 = vga_sync:vga_sync_dev|Add0~synth
+.names g64 g125 g102
+11 1
+
+#g66 = vga_sync:vga_sync_dev|hcount[8]
+#g102 = vga_sync:vga_sync_dev|Add0~synth
+#g103 = vga_sync:vga_sync_dev|Add0
+.names g66 g102 g103
+10 1
+01 1
+
+#g66 = vga_sync:vga_sync_dev|hcount[8]
+#g102 = vga_sync:vga_sync_dev|Add0~synth
+#g104 = vga_sync:vga_sync_dev|Add0~synth
+.names g66 g102 g104
+11 1
+
+#g68 = vga_sync:vga_sync_dev|hcount[9]
+#g104 = vga_sync:vga_sync_dev|Add0~synth
+#g105 = vga_sync:vga_sync_dev|Add0
+.names g68 g104 g105
+10 1
+01 1
+
+#g62 = vga_sync:vga_sync_dev|vcount[0]
+#g72 = vga_sync:vga_sync_dev|vcount[1]
+#g106 = vga_sync:vga_sync_dev|Add1
+.names g62 g72 g106
+10 1
+01 1
+
+#g62 = vga_sync:vga_sync_dev|vcount[0]
+#g72 = vga_sync:vga_sync_dev|vcount[1]
+#g107 = vga_sync:vga_sync_dev|Add1~synth
+.names g62 g72 g107
+11 1
+
+#g70 = vga_sync:vga_sync_dev|hcount[0]
+#g74 = vga_sync:vga_sync_dev|hcount[1]
+#g108 = vga_sync:vga_sync_dev|Add0
+.names g70 g74 g108
+10 1
+01 1
+
+#g70 = vga_sync:vga_sync_dev|hcount[0]
+#g74 = vga_sync:vga_sync_dev|hcount[1]
+#g109 = vga_sync:vga_sync_dev|Add0~synth
+.names g70 g74 g109
+11 1
+
+#g76 = vga_sync:vga_sync_dev|vcount[2]
+#g107 = vga_sync:vga_sync_dev|Add1~synth
+#g110 = vga_sync:vga_sync_dev|Add1
+.names g76 g107 g110
+10 1
+01 1
+
+#g76 = vga_sync:vga_sync_dev|vcount[2]
+#g107 = vga_sync:vga_sync_dev|Add1~synth
+#g111 = vga_sync:vga_sync_dev|Add1~synth
+.names g76 g107 g111
+11 1
+
+#g78 = vga_sync:vga_sync_dev|hcount[2]
+#g109 = vga_sync:vga_sync_dev|Add0~synth
+#g112 = vga_sync:vga_sync_dev|Add0
+.names g78 g109 g112
+10 1
+01 1
+
+#g78 = vga_sync:vga_sync_dev|hcount[2]
+#g109 = vga_sync:vga_sync_dev|Add0~synth
+#g113 = vga_sync:vga_sync_dev|Add0~synth
+.names g78 g109 g113
+11 1
+
+#g80 = vga_sync:vga_sync_dev|vcount[3]
+#g111 = vga_sync:vga_sync_dev|Add1~synth
+#g114 = vga_sync:vga_sync_dev|Add1
+.names g80 g111 g114
+10 1
+01 1
+
+#g80 = vga_sync:vga_sync_dev|vcount[3]
+#g111 = vga_sync:vga_sync_dev|Add1~synth
+#g115 = vga_sync:vga_sync_dev|Add1~synth
+.names g80 g111 g115
+11 1
+
+#g82 = vga_sync:vga_sync_dev|hcount[3]
+#g113 = vga_sync:vga_sync_dev|Add0~synth
+#g116 = vga_sync:vga_sync_dev|Add0
+.names g82 g113 g116
+10 1
+01 1
+
+#g82 = vga_sync:vga_sync_dev|hcount[3]
+#g113 = vga_sync:vga_sync_dev|Add0~synth
+#g117 = vga_sync:vga_sync_dev|Add0~synth
+.names g82 g113 g117
+11 1
+
+#g84 = vga_sync:vga_sync_dev|vcount[4]
+#g115 = vga_sync:vga_sync_dev|Add1~synth
+#g118 = vga_sync:vga_sync_dev|Add1
+.names g84 g115 g118
+10 1
+01 1
+
+#g84 = vga_sync:vga_sync_dev|vcount[4]
+#g115 = vga_sync:vga_sync_dev|Add1~synth
+#g119 = vga_sync:vga_sync_dev|Add1~synth
+.names g84 g115 g119
+11 1
+
+#g86 = vga_sync:vga_sync_dev|hcount[4]
+#g117 = vga_sync:vga_sync_dev|Add0~synth
+#g120 = vga_sync:vga_sync_dev|Add0
+.names g86 g117 g120
+10 1
+01 1
+
+#g86 = vga_sync:vga_sync_dev|hcount[4]
+#g117 = vga_sync:vga_sync_dev|Add0~synth
+#g121 = vga_sync:vga_sync_dev|Add0~synth
+.names g86 g117 g121
+11 1
+
+#g88 = vga_sync:vga_sync_dev|hcount[5]
+#g121 = vga_sync:vga_sync_dev|Add0~synth
+#g122 = vga_sync:vga_sync_dev|Add0
+.names g88 g121 g122
+10 1
+01 1
+
+#g88 = vga_sync:vga_sync_dev|hcount[5]
+#g121 = vga_sync:vga_sync_dev|Add0~synth
+#g123 = vga_sync:vga_sync_dev|Add0~synth
+.names g88 g121 g123
+11 1
+
+#g90 = vga_sync:vga_sync_dev|hcount[6]
+#g123 = vga_sync:vga_sync_dev|Add0~synth
+#g124 = vga_sync:vga_sync_dev|Add0
+.names g90 g123 g124
+10 1
+01 1
+
+#g90 = vga_sync:vga_sync_dev|hcount[6]
+#g123 = vga_sync:vga_sync_dev|Add0~synth
+#g125 = vga_sync:vga_sync_dev|Add0~synth
+.names g90 g123 g125
+11 1
+
+.end

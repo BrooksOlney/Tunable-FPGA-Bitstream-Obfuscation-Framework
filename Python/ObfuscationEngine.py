@@ -11,7 +11,7 @@ from Circuit import circuit
 import Utils
 
 class ObfuscationEngine:
-    def __init__(self, filename, vot, manufacturer):
+    def __init__(self, filename, vot, manufacturer, k=-1):
         """ ObfuscationEngine class constructor. This class serves as the top level - in terms of data/function operations.
             Use this class to parse BLIF files, perform obfuscation, and compile output files.
 
@@ -24,6 +24,7 @@ class ObfuscationEngine:
         self.cktObf = None
         self.vot    = vot
         self.man    = manufacturer
+        self.k      = k
 
     def __enter__(self):
         return self
@@ -70,11 +71,13 @@ class ObfuscationEngine:
         lutParts = self.partitionLUTs(subCkt, 5)
 
         # generate random obfuscation key
-        obfKey = [str(random.randint(0,1)) for x in range(len(lutParts))]
+        keySize = self.k if self.k != -1 else len(lutParts)
+        obfKey = bin(random.randint(0,2**keySize - 1))[2:].zfill(keySize)
 
         # distribute the key throughout the partitions, 1 bit per partition
         for keyIdx, part in enumerate(lutParts):
             for lut in part:
+                keyIdx %= keySize
                 lutIdx = random.randint(0, lut.numInputs - 1)
                 lut.addKeybit(obfKey[keyIdx], keyIdx, lutIdx)
 
@@ -159,7 +162,7 @@ class ObfuscationEngine:
 def main(args):
 
     print(args)
-    with ObfuscationEngine(args.i, args.v, args.m) as oe:
+    with ObfuscationEngine(args.i, args.v, args.m, args.k) as oe:
         
         oe.obfuscate(args.op)
         oe.writeVerilog(*args.vFiles)
@@ -171,14 +174,16 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap._action_groups.pop()
     required = ap.add_argument_group('required arguments')
-    optional = ap.add_argument_group('optional arguments')
     required.add_argument('-i', help="Input BLIF file: -i {ckt_name.blif}")
     required.add_argument('-vFiles', help="Verilog output filenames: -vFiles ckt.v ckt_secured.v", type=str, nargs=2, required=True)
+    required.add_argument('-m', help="FPGA manufacturer (for verilog primitives): -m {xilinx/altera}", required=True)
+    required.add_argument('-v', help="Verilog Output Type: -v {comb, lutprim}", required=True)
+    
+    optional = ap.add_argument_group('optional arguments')
     optional.add_argument('-op', help="Percentage of design to obfuscate: -op {float(0.0, 1.0]}", type=float, default=1.0)
     optional.add_argument('-sat', help="Implement SAT Attack resilience for the circuit: -sat")
     optional.add_argument('-blif', help="BLIF ouput filename: -blif {ckt_name.blif}")
-    required.add_argument('-m', help="FPGA manufacturer (for verilog primitives): -m {xilinx/altera}", required=True)
-    required.add_argument('-v', help="Verilog Output Type: -v {comb, lutprim}", required=True)
+    optional.add_argument('-k', help="Desired size of the obfuscation key.", type=int, default=-1)
 
     args = ap.parse_args()
     main(args)
