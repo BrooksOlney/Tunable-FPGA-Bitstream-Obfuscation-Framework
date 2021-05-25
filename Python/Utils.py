@@ -76,6 +76,9 @@ def readBLIF(filename):
                 if wire not in wires:
                     wires.append(wire)
 
+            if newLUT.numInputs == 0:
+                print("uh oh")
+
             luts.append(newLUT)
 
         elif ".latch" in line:
@@ -91,7 +94,7 @@ def readBLIF(filename):
             for port in portList:
                 if port in latchTypes:
                     latchType = port
-                elif port == "1" or port == "0":
+                elif port == "2" or port == "1" or port == "0":
                     latchInit = port
                 else:
                     latchControl = port
@@ -333,13 +336,12 @@ def parseVectors(nodes):
 
     for node in nodes:
         vec = node.split('~')
-
         if len(vec) == 1:
             visited.append(vec[0])
             vectors[vec[0]] = 0
 
         else:
-            vName, vIdx = vec
+            vName, vIdx, _ = vec
 
             if vName not in visited:
                 visited.append(vName)

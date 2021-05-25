@@ -1,4 +1,4 @@
 {
-    "python.pythonPath": "C:\\Users\\Brooks\\AppData\\Local\\Programs\\Python\\Python37\\python.exe",
+    "python.pythonPath": "C:\\Users\\Brooks\\anaconda3\\envs\\tf\\python.exe",
     "python.autoComplete.extraPaths": ["./Python/"]
 }

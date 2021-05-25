@@ -24,7 +24,7 @@ class latch:
         elif self.latchType == "as":
             latchSB.append("always @({0}) begin {1} <= {0}; end".format(self.linput, self.output))
         elif self.latchType == "":
-            latchSB.append("always @({0}) begin {1} <= {0}; end".format(self.linput, output))
+            latchSB.append("always @({0}) begin {1} <= {0}; end".format(self.linput, self.output))
         else:
             raise Exception("Invalid latch type found .BLIF file.")
             

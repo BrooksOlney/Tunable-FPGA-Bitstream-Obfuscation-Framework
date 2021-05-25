@@ -9,7 +9,9 @@
             "type": "python",
             "request": "launch",
             "program": "${file}",
-            "console": "integratedTerminal"
+            "console": "integratedTerminal",
+            "args" : ["-i", "F:\\Research\\Tunable_MUTARCH\\Python\\blifs\\VGAfinal.blif", 
+                "-vFiles", "F:\\Research\\Tunable_MUTARCH\\Python\\vga.v", "F:\\Research\\Tunable_MUTARCH\\Python\\vga_s.v", "-m", "altera", "-v", "lutprim"]
         }
     ]
 }
