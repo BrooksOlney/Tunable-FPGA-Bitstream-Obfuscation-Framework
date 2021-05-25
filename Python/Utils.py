@@ -54,6 +54,9 @@ def readBLIF(filename):
             portList = line.split(' ')
             output = portList[-1]
             lutInputs = [port.replace("[", "~").replace("]", "~") for port in portList[1:-1]] 
+            
+            # ignore degenerate port - artifact from rtl tool
+            if len(portList) == 2: continue
 
             newLUT = LUT(lutCount, lutInputs, output)
             lutCount += 1

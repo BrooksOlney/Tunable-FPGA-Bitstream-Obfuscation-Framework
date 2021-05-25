@@ -863,5 +863,6 @@
 #g125 = vga_sync:vga_sync_dev|Add0~synth
 .names g90 g123 g125
 11 1
-
+.names gnd
 .end
+
