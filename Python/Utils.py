@@ -224,8 +224,8 @@ def writeVerilog(filename, ckt, vot, manufacturer):
         else:
             oStrs.append("output {} {}".format(regWire, ovecKey))
     
-    vCode.append(', '.join(iStrs))
-    vCode.append(', '.join(oStrs))
+    vCode.append(', '.join([*iStrs, *oStrs]))
+    # vCode.append(', '.join(oStrs))
     vCode.append(");\n\n")
 
     # adds commented out registers for inputs/outputs/obfKey
