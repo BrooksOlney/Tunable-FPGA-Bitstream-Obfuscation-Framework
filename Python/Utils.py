@@ -76,7 +76,7 @@ def readBLIF(filename):
 
             # add unseen wires 
             for wire in lutInputs:
-                if wire not in wires:
+                if wire not in wires and wire not in regs:
                     wires.append(wire)
 
             if newLUT.numInputs == 0:
@@ -101,10 +101,13 @@ def readBLIF(filename):
                     latchInit = port
                 else:
                     latchControl = port
-
+            
             newLatch = latch(latchInput, latchOutput, latchType, latchControl, latchInit)
+            regs.append(latchOutput)
             latches.append(newLatch)
-
+            
+            if latchOutput in wires:
+                wires.remove(latchOutput)
 
         else:
             if str.isspace(line) or line.startswith("#") or "end" in line or len(line.split(' ')) == 2 or line == '': continue
