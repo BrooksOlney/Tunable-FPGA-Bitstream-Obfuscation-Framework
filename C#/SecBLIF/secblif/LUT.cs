@@ -230,54 +230,11 @@ namespace SecBLIF
             }
 
 
-            // minimizing functional mismatch, leaving in for now if it comes in handy for whatever reason
-            //int entries = 0;
-            //foreach (KeyValuePair<string, string> original_entry in original_tt)
-            //{
-            //    if (entries == original_tt.Count - 1) break;
-
-            //    string reverse_key_bit = "";
-
-            //    if (key_bit.Equals("1"))
-            //        reverse_key_bit = "0";
-            //    else
-            //        reverse_key_bit = "1";
-
-            //    string tt_entry = original_entry.Key.Insert(key_idx, reverse_key_bit);
-
-            //    if (!tt_sec.ContainsKey(tt_entry))
-            //        tt_sec.Add(tt_entry.ToString(), original_entry.Value);
-
-            //    entries++;
-            //}
 
             LUTinputs.Insert(key_idx, "sk[" + lut_idx + "]");
             TruthTable = tt_sec;
             string new_tt = expandTruthTable();
 
-            //bool xor_done = false;
-            //char reverse_key_bit;
-
-            //if (key_bit.Equals("1"))
-            //    reverse_key_bit = '0';
-            //else
-            //    reverse_key_bit = '1';
-
-            //for(int i = 0; i < new_tt.Length; i++)
-            //{
-            //    if (new_tt[i].Equals('0'))
-            //    {
-            //        var minterm = Convert.ToString(i, 2).PadLeft(NumInputs, '0');
-
-            //        if(minterm[key_idx].ToString() == key_bit)
-            //        {
-            //            StringBuilder sb = new StringBuilder(minterm);
-            //            sb[key_idx] = reverse_key_bit;
-            //            tt_sec.Add(sb.ToString(), "1");
-
-            //        }
-            //    }
-            //}
             secured = true;
             var newer_tt = expandTruthTable();
             keyBits++;
