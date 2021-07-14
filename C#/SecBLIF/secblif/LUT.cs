@@ -241,40 +241,6 @@ namespace SecBLIF
             //hammingDistance = HammingDistance(key_idx);
         }
 
-        public double HammingDistance(int keyindex)
-        {
-            double hammingDistance = 0;
-
-            int mismatchMinterms = 0;
-            for(int i = 0; i < Math.Pow(2, NumInputs); i++)
-            {
-                string tt_line = Convert.ToString(i, 2).PadLeft(NumInputs, '0');
-                string keyBit = tt_line[keyindex].ToString();
-
-                if(keyBit != keyVal)
-                {
-                    StringBuilder tt_line_reverse = new StringBuilder(tt_line);
-
-                    if (keyBit == "0")
-                        tt_line_reverse[keyindex] = '1';
-                    else
-                        tt_line_reverse[keyindex] = '0';
-
-                    string reverse_val = matchTT(tt_line_reverse.ToString());
-                    string current_val = matchTT(tt_line);
-
-                    if (reverse_val != current_val)
-                        mismatchMinterms++;
-
-                }
-
-
-            }
-            hammingDistance = (mismatchMinterms / Math.Pow(2, NumInputs - 1)) * 100;
-
-            return hammingDistance;
-        }
-
         private string matchTT(string pattern)
         {
             string ret = "0";
