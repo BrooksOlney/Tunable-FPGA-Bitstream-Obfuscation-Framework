@@ -2,4 +2,6 @@ C#/secblif/bin/* linguist-vendored
 C#/secblif/obj/* linguist-vendored
 C#/secblif/Properties/* linguist-vendored
 
+*.python linguist-detectable=true
+*.cs linguist-detectable=true
 *.v linguist-vendored
