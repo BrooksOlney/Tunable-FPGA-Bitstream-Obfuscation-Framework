@@ -68,7 +68,7 @@ class ObfuscationEngine:
 
         # partition the LUTs for obfuscation to prevent key explosion
         subCkt = [l for l in self.cktObf.luts if l.numInputs < self.ckt.sizeLUT][:obfRange]
-        lutParts = self.partitionLUTs(subCkt, 5)
+        lutParts = self.partitionLUTs(subCkt, 1)
 
         # generate random obfuscation key
         keySize = self.k if self.k != -1 else len(lutParts)

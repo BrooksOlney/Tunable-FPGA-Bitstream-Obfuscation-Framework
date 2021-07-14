@@ -79,6 +79,9 @@ def readBLIF(filename):
                 if wire not in wires and wire not in regs:
                     wires.append(wire)
 
+            if output not in wires and output.replace("[","~").replace("]", "~") not in outputs:
+                wires.append(output)
+
             if newLUT.numInputs == 0:
                 print("uh oh")
 

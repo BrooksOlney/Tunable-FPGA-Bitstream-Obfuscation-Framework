@@ -1,0 +1,92 @@
+.model pixel_gen
+.inputs x_pxl[0] y_pxl[0] x_pxl[1] y_pxl[1] x_pxl[2] y_pxl[2] x_pxl[3] y_pxl[3] x_pxl[4] y_pxl[4] x_pxl[5] y_pxl[5] x_pxl[6] y_pxl[6] x_pxl[7] y_pxl[7] x_pxl[8] y_pxl[8] x_pxl[9] y_pxl[9]
+.outputs rgb[0] rgb[1] rgb[2] rgb[3] rgb[4] rgb[5] rgb[6] rgb[7] rgb[8] rgb[9] rgb[10] rgb[11]
+
+.names gnd rgb[0]
+1 1
+.names gnd rgb[1]
+1 1
+.names gnd rgb[2]
+1 1
+.names gnd rgb[3]
+1 1
+.names gnd rgb[4]
+1 1
+.names gnd rgb[5]
+1 1
+.names gnd rgb[6]
+1 1
+.names gnd rgb[7]
+1 1
+# g11 = WideOr0
+.names g11 rgb[8]
+0 1
+
+# g11 = WideOr0
+.names g11 rgb[9]
+0 1
+
+# g11 = WideOr0
+.names g11 rgb[10]
+0 1
+
+# g11 = WideOr0
+.names g11 rgb[11]
+0 1
+
+#g1 = rgb~synth
+.names x_pxl[0] y_pxl[0] g1
+11 1
+
+#g2 = rgb~synth
+.names x_pxl[1] y_pxl[1] g2
+11 1
+
+#g3 = rgb~synth
+.names x_pxl[2] y_pxl[2] g3
+11 1
+
+#g4 = rgb~synth
+.names x_pxl[3] y_pxl[3] g4
+11 1
+
+#g5 = rgb~synth
+.names x_pxl[4] y_pxl[4] g5
+11 1
+
+#g6 = rgb~synth
+.names x_pxl[5] y_pxl[5] g6
+11 1
+
+#g7 = rgb~synth
+.names x_pxl[6] y_pxl[6] g7
+11 1
+
+#g8 = rgb~synth
+.names x_pxl[7] y_pxl[7] g8
+11 1
+
+#g9 = rgb~synth
+.names x_pxl[8] y_pxl[8] g9
+11 1
+
+#g10 = rgb~synth
+.names x_pxl[9] y_pxl[9] g10
+11 1
+
+#g1 = rgb~synth
+#g2 = rgb~synth
+#g3 = rgb~synth
+#g4 = rgb~synth
+#g5 = rgb~synth
+#g6 = rgb~synth
+#g7 = rgb~synth
+#g8 = rgb~synth
+#g9 = rgb~synth
+#g10 = rgb~synth
+#g11 = WideOr0
+.names g1 g2 g3 g4 g5 g6 g7 g8 g9 g10 g11
+0000000000 0
+.names gnd
+.end
+

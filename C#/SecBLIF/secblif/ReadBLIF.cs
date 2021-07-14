@@ -215,22 +215,6 @@ namespace SecBLIF
             if (name_start < 0) name_start = 0;
             string mod_name = filename.Substring(name_start).Replace(".v", "").Replace('.', 'x');
 
-            //mod_name = mod_name + "_map";
-            ////filename = filename.Insert(filename.LastIndexOf(".v"), "_map");
-
-            //if (IsSecure)
-            //{
-            //    if (LUTsShareKey)
-            //    {
-            //        filename = filename.Insert(filename.LastIndexOf("/") + 1, "ks_");
-            //        mod_name = "ks_" + mod_name;
-            //    }
-            //    else
-            //    {
-            //        filename = filename.Insert(filename.LastIndexOf("/") + 1, "ns_");
-            //        mod_name = "ns_" + mod_name;
-            //    }
-            //}
 
             TextWriter w = new StreamWriter(filename);
 
@@ -285,52 +269,14 @@ namespace SecBLIF
                     else
                         w.Write(", output wire {0}", vector.Key);
                 }
-                //}
-                //else
-                //{
-                //    if (vector.Value > 0)
-                //        w.Write(", output [{0}:0] {1}", vector.Value, vector.Key);
-                //    else
-                //        w.Write(", output {0}", vector.Key);
-                //}
             }
 
-            //for (int i = 0; i < CKT_INPUTS.Count; i++)
-            //{
 
-            //    w.Write(CKT_INPUTS[i] + ", ");
-            //}
-            //for(int i = 0; i < CKT_OUTPUTS.Count; i++)
-            //{
-            //    if (CKT_OUTPUTS[i].StartsWith("reg "))
-            //        w.Write(CKT_OUTPUTS[i].Substring(4));
-            //    else
-            //        w.Write(CKT_OUTPUTS[i]);
-            //    if (i != CKT_OUTPUTS.Count - 1)
-            //        w.Write(", ");
-            //}
             w.Write(");\n");
             w.Write("\n");
-            //for (int i = 0; i < CKT_INPUTS.Count; i++)
-            //{
-            //    w.WriteLine("\tinput {0};", CKT_INPUTS[i]);
-            //}
-            //for (int i = 0; i < CKT_OUTPUTS.Count; i++)
-            //{
-            //    w.WriteLine("\toutput {0};", CKT_OUTPUTS[i]);
-            //}
+
             w.WriteLine();
-            //if (IsSecure)
-            //{
-            //    if (LUTsShareKey)
-            //    {
-            //        int keybits = LUTsPerKey;// (int)Math.Ceiling((double)CKT_LUTs.Count / (double)LUTsPerKey);
-            //        w.Write("\tinput [{0} : 0] sk /* synthesis noprune */;\n", keybits - 1);
-            //    }
-            //    else
-            //        w.Write("\tinput [{0} : 0] sk /* synthesis noprune */;\n", CKT_LUTS.Count - 1);
-            //}
-            //w.WriteLine();
+
             int cnt = 0, elemsPerLine = 10;
 
             if(vot == VerilogOutputType.COMBLOG_COMP)
@@ -453,28 +399,6 @@ namespace SecBLIF
 
             w.WriteLine();
 
-            //if (IsSecure)
-            //{
-            //    // XOR all primary outputs with SARLock flip/mask unit
-            //    foreach (LUT lut in CKT_LUTS)
-            //    {
-            //        if (!CKT_OUTPUTS.Contains(lut.LUToutput.Replace('[', '~').Replace(']', '~'))) continue;
-            //        //if (lut.NumInputs >= MAXLUTSIZE) continue;
-
-            //        lut.LUTinputs.Insert(0, "satwreck");
-
-            //        Dictionary<string, string> minterms = new Dictionary<string, string>();
-            //        foreach (KeyValuePair<string, string> kvp in lut.TruthTable)
-            //        {
-            //            string minterm = "0" + kvp.Key;
-            //            minterms.Add(minterm, kvp.Value);
-            //        }
-
-            //        lut.TruthTable = minterms;
-            //        lut.NumInputs++;
-            //        lut.ContentSize *= 2;
-            //    }
-            //}
 
             if (vot == VerilogOutputType.COMBLOG_COMP)
             {
@@ -582,48 +506,7 @@ namespace SecBLIF
             Console.WriteLine("Done. ({0:0.000} s)", diff.TotalSeconds);
         }
 
-        /*
-        internal void MakeSecure(int LUTsPerKey)
-        {
-            DateTime start = DateTime.Now;
-            Util.WriteInfo("Securing BLIF file...", true);
-            this.LUTsPerKey = LUTsPerKey;
-            LUTsShareKey = true;
-            IsSecure = true;
-            int numMaxSizeLUT = LUTSizeCount[MaxLUTSize];
-
-            int maxCutoff = (int)(CKT_LUTS.Count * obfuscationPercentage);
-
-            for(int i = 0; i < LUTSizeCount.Length; i++)
-            {
-                LUTSizeCount[i] = 0;
-            }
-            Random r = new Random();
-            for (int i = 0; i < maxCutoff; i++)
-            {
-                if (CKT_LUTS[i].NumInputs == MaxLUTSize)
-                {
-                    numMaxSizeLUT++;
-                    continue;
-                }
-                CKT_LUTS[i].AddKeyInput("1", r.Next(0, CKT_LUTS[i].NumInputs), r.Next(0, LUTsPerKey)); //127));// i % LUTsPerKey); // how does random assignment affect overhead?
-                LUTSizeCount[CKT_LUTS[i].NumInputs]++;
-            }
-
-            // refill LUTSizeCount that was not obfuscated
-            for (int i = maxCutoff; i < CKT_LUTS.Count ; i++)
-            {
-                LUTSizeCount[CKT_LUTS[i].NumInputs]++;
-            }
-
-            LUTSizeCount[MaxLUTSize] += numMaxSizeLUT; // add the original number of MaxLUTSize LUTs back in.
-            DateTime end = DateTime.Now;
-
-            var diff = end - start;
-            Console.WriteLine("Done. ({0:0.000} s)", diff.TotalSeconds);
-        }
-
-        */
+        
         public static void NumericalSort(string[] ar)
         {
             Regex rgx = new Regex("([^0-9]*)([0-9]+)");
@@ -1064,506 +947,6 @@ namespace SecBLIF
             return minterms;
         }
 
-        internal void SARLockWholeCircuit()
-        {
-            int lutnum = maxLUTID + 1;
-            int numSarlockKeys = CKT_INPUTS.Count;
-            string[] SARLockKeys = new string[numSarlockKeys];
-            string[] SARLockKeyVals = new string[numSarlockKeys];
-            Dictionary<string, string> keyDictionary = new Dictionary<string, string>();
-            string correctKey = "";
-            Random rnd1 = new Random();
-            List<string> ckt_inputs = new List<string>(CKT_INPUTS.OrderBy(x => rnd1.Next()));
-            List<string> lut_inputs = new List<string>(ckt_inputs);
-
-            Random rnd = new Random();
-            for(int i = 0; i < numSarlockKeys; i++)
-            {
-                SARLockKeys[i] = "sk[" + keyBits++ + "]";
-                var keyval = rnd.Next(0, 2).ToString();
-                correctKey += keyval;
-                sprng_key += keyval;
-                SARLockKeyVals[i] = keyval;
-                lut_inputs.Insert(rnd.Next(0, lut_inputs.Count + 1), SARLockKeys[i]);
-                keyDictionary.Add(SARLockKeys[i], keyval);
-            }
-
-            string correctKeytmp = correctKey;
-            List<string> SATkeys = SARLockKeys.ToList();
-            List<LUT> compare_LUTs = new List<LUT>();
-            List<string> compareWires = new List<string>();
-
-            int sizeSatLUT= MaxLUTSize / 2;
-            int inputsCompare = numSarlockKeys;
-            int compareIndex = 0;
-
-            while(inputsCompare > 0)
-            {
-                int numLUTinputs;
-                List<string> lutInputs = new List<string>();
-                if (inputsCompare >= sizeSatLUT)
-                {
-                    numLUTinputs = sizeSatLUT;
-                    inputsCompare -= sizeSatLUT;
-                }
-                else
-                {
-                    // reach endcase - no more inputs left to compare
-                    numLUTinputs = inputsCompare;
-                    inputsCompare = 0;
-                }
-
-                List<string> sarlockKeys = new List<string>();
-                string cur_correctKey = "";
-                for(int i = 0; i < numLUTinputs; i++)
-                {
-                    sarlockKeys.Add(SATkeys[0]);
-                    SATkeys.RemoveAt(0);
-                }
-
-                cur_correctKey = correctKeytmp.Substring(0, numLUTinputs);
-                correctKeytmp = correctKeytmp.Substring(numLUTinputs - 1, correctKeytmp.Length - numLUTinputs);
-                Random rng1 = new Random();
-
-                for(int i = 0; i < numLUTinputs; i++)
-                {
-                    int index = rng1.Next(0, ckt_inputs.Count);
-                    lutInputs.Add(ckt_inputs[index]);
-                    ckt_inputs.RemoveAt(index);
-                }
-
-                List<string> circuit_inputs = new List<string>(lutInputs);
-                Random rng2 = new Random();
-                lutInputs.AddRange(sarlockKeys);
-                lutInputs.OrderBy(x => rng2.Next());
-
-                string outputName = "satCompare" + compareIndex++.ToString();
-                compareWires.Add(outputName);
-                LUT inputLUT = new LUT(outputName, lutnum++.ToString(), lutInputs.ToArray());
-
-                Dictionary<string, int> inputPositions = new Dictionary<string, int>();
-                for (int i = 0; i < inputLUT.NumInputs; i++)
-                    inputPositions.Add(inputLUT.LUTinputs[i], i);
-
-                Dictionary<string, string> newMinterms = new Dictionary<string, string>();
-
-                for (int i = 0; i < Math.Pow(2, numLUTinputs); i++)
-                {
-                    string tt_line = Convert.ToString(i, 2).PadLeft(numLUTinputs, '0');
-
-                    if (tt_line != "")
-                    {
-                        char[] minterm = new char[inputLUT.NumInputs];
-                        for (int j = 0; j < numLUTinputs; j++)
-                        {
-                            minterm[inputPositions[circuit_inputs[j]]] = tt_line[j];
-                        }
-                        for (int j = 0; j < sarlockKeys.ToList().Count; j++)
-                        {
-                            minterm[inputPositions[sarlockKeys[j]]] = tt_line[j];
-                        }
-                        newMinterms.Add(new string(minterm), "1");
-                    }
-                }
-                inputLUT.TruthTable = newMinterms;
-                compare_LUTs.Add(inputLUT);
-            }
-
-            int level1wires = compareWires.Count;
-
-            List<LUT> compare_level1LUTs = new List<LUT>();
-            List<string> compareWires_tmp = new List<string>(compareWires);
-            List<string> compare_level1Wires = new List<string>();
-            int compare_level1Wire = 0;
-            while (level1wires > 0)
-            {
-                int numlutinputs = 0;
-                if(level1wires >= MaxLUTSize)
-                {
-                    numlutinputs = MaxLUTSize;
-                    level1wires -= MaxLUTSize;
-                }
-                else
-                {
-                    numlutinputs = level1wires;
-                    level1wires = 0;
-                }
-
-                List<string> level1inputs = new List<string>(compareWires_tmp.GetRange(0, numlutinputs));
-                //level1inputs.AddRange(compareWires.GetRange(0, numlutinputs));
-                compareWires_tmp = compareWires_tmp.GetRange(numlutinputs, compareWires_tmp.Count - numlutinputs);
-
-                string compareWire = "groupCompare" + compare_level1Wire++.ToString();
-                compare_level1Wires.Add(compareWire);
-                LUT level1LUT = new LUT(compareWire, lutnum++.ToString(), level1inputs.ToArray());
-                Dictionary<string, string> newMinterms = new Dictionary<string, string>();
-                newMinterms.Add("".PadLeft(level1inputs.Count, '1'), "1");
-
-                level1LUT.TruthTable = newMinterms;
-                compare_level1LUTs.Add(level1LUT);
-            }
-
-
-            List<LUT> maskLUTs = new List<LUT>();
-
-
-            //LUT inputLut = new LUT("sarlockOut", "0", lut_inputs.ToArray());
-            List<string> maskWires = new List<string>();
-            int keybitsCompare = numSarlockKeys;
-            int keyindex = 0;
-            int maskIndex = 0;
-            while(keybitsCompare > 0)
-            {
-                int numlutinputs = 0;
-                if (keybitsCompare >= MaxLUTSize)
-                {
-                    numlutinputs = MaxLUTSize;
-                    keybitsCompare -= MaxLUTSize;
-                }
-                else
-                {
-                    numlutinputs = keybitsCompare;
-                    keybitsCompare = 0;
-                }
-
-                List<string> inputsList = new List<string>();
-                string correctKeyval = "";
-                for (int i = keyindex; i < keyindex + numlutinputs; i++)
-                {
-                    inputsList.Add(SARLockKeys[i]);
-                    correctKeyval += SARLockKeyVals[i];
-                }
-                keyindex += numlutinputs;
-                string maskLUTOutput = "keymask" + maskIndex++.ToString();
-                maskWires.Add(maskLUTOutput);
-                LUT maskLUT = new LUT(maskLUTOutput, lutnum++.ToString(), inputsList.ToArray());
-
-                maskLUT.TruthTable.Add(correctKeyval, "1");
-                maskLUTs.Add(maskLUT);
-            }
-
-            LUT maskSentinel = new LUT("maskSignal", lutnum++.ToString(), maskWires.ToArray());
-            maskSentinel.TruthTable.Add("".PadLeft(maskWires.Count, '1'), "1");
-            maskLUTs.Add(maskSentinel);
-
-
-            List<string> sat_circuit_inputs = new List<string>();
-            sat_circuit_inputs.AddRange(compare_level1Wires);
-            sat_circuit_inputs.Add("maskSignal");
-            LUT finalLUT = new LUT("sarlockOut", lutnum++.ToString(), sat_circuit_inputs.ToArray());
-
-            finalLUT.TruthTable.Add("".PadLeft(compare_level1Wires.Count, '1') + "0", "1");
-
-            CKT_LUTS.AddRange(compare_LUTs);
-            CKT_LUTS.AddRange(compare_level1LUTs);
-            CKT_LUTS.AddRange(maskLUTs);
-            CKT_LUTS.Add(finalLUT);
-
-            CKT_WIRES.AddRange(compareWires);
-            CKT_WIRES.AddRange(compare_level1Wires);
-            CKT_WIRES.AddRange(maskWires);
-            CKT_WIRES.Add("maskSignal");
-            //CKT_WIRES.Add("sarlockOut");
-
-
-            CKT_WIRES.Add("sarlockOut");
-            //Dictionary<string, int> inputPositions = new Dictionary<string, int>();
-            //for (int i = 0; i < inputLut.NumInputs; i++)
-            //    inputPositions.Add(inputLut.LUTinputs[i], i);
-
-            //Dictionary<string, string> newMinterms = new Dictionary<string, string>();
-
-            //int flip_count = 0;
-            //for (int i = 0; i < Math.Pow(2, numSarlockKeys); i++)
-            //{
-            //    string tt_line = Convert.ToString(i, 2).PadLeft(numSarlockKeys, '0');
-
-            //    if(tt_line != correctKey)
-            //    {
-            //        char[] minterm = new char[inputLut.NumInputs];
-            //        for (int j = 0; j < ckt_inputs.Count; j++)
-            //        {
-            //            minterm[inputPositions[ckt_inputs[j]]] = tt_line[j];
-            //        }
-            //        for (int j = 0; j < SARLockKeys.ToList().Count; j++)
-            //        {
-            //            minterm[inputPositions[SARLockKeys[j]]] = tt_line[j];
-            //        }
-            //        newMinterms.Add(new string(minterm), "1");
-            //    }
-            //}
-
-            //inputLut.TruthTable = newMinterms;
-            //LUTSizeCount[inputLut.NumInputs]++;
-            //CKT_LUTS.Add(inputLut);
-
-            // XOR all primary outputs with SARLock flip/mask unit
-            foreach (LUT lut in CKT_LUTS)
-            {
-                if (!CKT_OUTPUTS.Contains(lut.LUToutput)) continue;
-                //if (lut.NumInputs >= MaxLUTSize) continue;
-
-                lut.LUTinputs.Insert(0, "sarlockOut");
-
-                Dictionary<string, string> minterms = new Dictionary<string, string>();
-                foreach (KeyValuePair<string, string> kvp in lut.TruthTable)
-                {
-                    string minterm = "0" + kvp.Key;
-                    minterms.Add(minterm, kvp.Value);
-                }
-
-                lut.TruthTable = minterms;
-                lut.NumInputs++;
-                lut.ContentSize *= 2;
-            }
-
-            this.IsSecure = true;
-        }
-
-        internal void SARLockDarkSilicon()
-        {
-            int count = 0;
-            foreach(LUT lut in CKT_LUTS)
-            {
-                if (count > 0) continue;
-                //if (lut.NumInputs < 14) continue;
-                //if (count > 0) break;
-                //count++;
-                //if (!lut.secured) continue;
-                //if (!CKT_OUTPUTS.Contains(lut.LUToutput) && lut.Weight < 1500) continue;
-
-                //if (CKT_OUTPUTS.Contains(lut.LUToutput) && lut.NumInputs == 1) continue;
-                //if (lut.Weight < 1500) continue;
-
-
-                int numInputsCompare = lut.NumInputs;// lut.NumInputs - 1;
-                //if (!lut.secured)
-                //    numInputsCompare = 1;
-                //else
-                //    numInputsCompare = lut.NumInputs - 1;
-
-                //if (lut.NumInputs == 12)
-                //{
-                //    numInputsCompare = lut.NumInputs - 4;
-                //}
-                //else if (lut.NumInputs == 11)
-                //    numInputsCompare = lut.NumInputs - 3;
-                //else if (lut.NumInputs == 10)
-                //    numInputsCompare = lut.NumInputs - 2;
-                //else
-                //if (lut.NumInputs == 16 && count == 0)
-                //{
-                //    numInputsCompare = lut.NumInputs;
-                //    count++;
-                //}
-                //else
-                //    continue;
-
-                LUTSizeCount[lut.NumInputs]--;
-
-                // values for new key inputs, as well as MUTARCH Key
-                string Km = "sk[" + lut.keyIndex + "]";                 // MUTARCH key index
-                string Km_val = lut.keyVal;                             // MUTARCH key value
-                string[] SARLockKeys = new string[numInputsCompare];    // Array to store SARLock keys inserted to LUT
-                string[] SARLockKeyVals = new string[numInputsCompare]; // Array to store SARLock key values
-                string correctKey = "";
-                // end values
-
-                // assign key indices
-                for (int i = 0; i < SARLockKeys.Length; i++)
-                    SARLockKeys[i] = "sk[" + keyBits++ + "]";
-
-                // generate key vals
-                Random rnd1 = new Random();
-                for (int i = 0; i < SARLockKeyVals.Length; i++)
-                {
-                    string keyval = rnd1.Next(0, 2).ToString();
-                    SARLockKeyVals[i] = keyval;
-                    sprng_key += keyval;
-                }
-
-                //// match value for our flip generation
-                //string match = Km_val == SARLockKeyVals[0] ? "0" : "1";
-                //for (int i = 1; i < numInputsCompare; i++)
-                //    match += SARLockKeyVals[i];
-
-                // store the correct key value
-                if(lut.secured)
-                    correctKey = Km_val;
-
-                for (int i = 0; i < numInputsCompare; i++)
-                    correctKey += SARLockKeyVals[i];
-
-                // all inputs into LUT 
-                List<string> inputs = new List<string>();
-                List<string> inputsWithKey = new List<string>(lut.LUTinputs);
-                foreach(string input in lut.LUTinputs)
-                    if (input != Km) inputs.Add(input);
-
-
-                Dictionary<string, int> inputPositions = new Dictionary<string, int>();
-                Random rnd = new Random();
-                // insert SARLock key bits into LUT inputs, keep track of positions
-                for (int i = 0; i < numInputsCompare; i++)
-                {
-                    
-                    int position = rnd.Next(0, lut.NumInputs + 1);
-                    //inputPositions.Add(SARLockKeys[i], position);
-                    lut.LUTinputs.Insert(position, SARLockKeys[i]);
-                    lut.NumInputs++;
-                }
-
-                for (int i = 0; i < lut.NumInputs; i++)
-                    inputPositions.Add(lut.LUTinputs[i], i);
-
-                // keep track of all input positions
-                for(int i = 0; i < lut.LUTinputs.Count; i++)
-                {
-                    if (!inputPositions.ContainsKey(lut.LUTinputs[i])) inputPositions.Add(lut.LUTinputs[i], i);
-                }
-
-                Dictionary<string, string> newMinterms = new Dictionary<string, string>();
-                int flip_count = 0;
-                Parallel.For(0, (int)Math.Pow(2, lut.NumInputs), i =>
-                {
-                    bool flip = false;
-                    bool mask = false;
-                    string tt_line = Convert.ToString(i, 2).PadLeft(lut.NumInputs, '0');
-
-                    string key = "";
-                    if (lut.secured)
-                        key = tt_line[inputPositions[Km]].ToString();
-
-                    string pattern = "";
-                    string allInputsPattern = "";
-
-                    // match = (Km ^ Ks0)
-                    string match = "";
-                    if (lut.secured)
-                        match = tt_line[inputPositions[SARLockKeys[0]]] == tt_line[inputPositions[Km]] ? "0" : "1";
-
-                    // match = (Km ^ Ks0) AND Ks1 AND Ks2 AND ... Ksn
-                    if (lut.secured)
-                    {
-                        for (int j = 1; j < numInputsCompare; j++)
-                        {
-                            match += tt_line[inputPositions[SARLockKeys[j]]].ToString();
-                        }
-                    }
-                    else
-                    {
-                        for (int j = 0; j < numInputsCompare; j++)
-                        {
-                            match += tt_line[inputPositions[SARLockKeys[j]]].ToString();
-                        }
-                    }
-
-
-                    // input pattern used for comparing to match sequence
-                    for (int j = 0; j < numInputsCompare; j++)
-                    {
-                        if (inputs[j] == Km) continue;
-                        pattern += tt_line[inputPositions[inputs[j]]].ToString();
-                    }
-
-                    // get minterm of all inputs including MUTARCH key, to compare to original TT
-                    for (int j = 0; j < inputsWithKey.Count; j++)
-                    {
-                        allInputsPattern += tt_line[inputPositions[inputsWithKey[j]]].ToString();
-                    }
-
-                    // key value of Km Ks0 ... Ksn to see if we have the correct key
-                    for (int j = 0; j < numInputsCompare; j++)
-                        key += tt_line[inputPositions[SARLockKeys[j]]].ToString();
-
-                    if (pattern == match)
-                    {
-                        //flip_count++;
-                        flip = true;
-                    }
-
-                    if (key == correctKey)
-                    {
-                        mask = true;
-                    }
-
-                    //if (flip && !mask)
-
-
-                    if (mask)
-                    {
-                        // if current expression matches original minterm, include in new TT
-                        if (matchTT(allInputsPattern, lut.TruthTable) == "1")
-                            newMinterms.Add(tt_line, "1");
-                    }
-                    else if (flip)
-                    {
-                        // if current expression matches a minterm from original TT, don't include it, if output would originally be 0, flip it and include new minterm
-                        if (matchTT(allInputsPattern, lut.TruthTable) == "0")
-                            newMinterms.Add(tt_line, "1");
-
-                        flip_count++;
-                    }
-                    else
-                    {
-                        if (matchTT(allInputsPattern, lut.TruthTable) == "1")
-                            newMinterms.Add(tt_line, "1");
-                    }
-
-                }
-                );
-
-                List<string> incorrectKeys = getIncorrectKeys(correctKey);
-
-
-                ////// MY ATTEMPT TO SPEED THIS UP FOR THE LOVE OF GOD IT'S SO SLOW!!!!
-                //for (int i = 0; i < numInputsCompare; i++)
-                //{
-                //    bool flip = false;
-                //    bool mask = false;
-                //    string tt_line = Convert.ToString(i, 2).PadLeft(numInputsCompare, '0');
-
-
-                //    string keypattern = tt_line;
-
-
-                //    if (keypattern == correctKey)
-                //    {
-                //        mask = true;
-                //    }
-
-                //    AddIncorrectKeys(tt_line, correctKey, incorrectKeys, inputs, SARLockKeys.ToList(), inputPositions, lut.TruthTable, ref newMinterms);
-
-                //    if (mask)
-                //    {
-                //        // if current expression matches original minterm, include in new TT
-                //        if (matchTT(keypattern, lut.TruthTable) == "1")
-                //            newMinterms.Add(tt_line, "1");
-                //    }
-                //    else if (flip)
-                //    {
-                //        // if current expression matches a minterm from original TT, don't include it, if output would originally be 0, flip it and include new minterm
-                //        if (matchTT(keypattern, lut.TruthTable) == "0")
-                //            newMinterms.Add(tt_line, "1");
-
-                //        flip_count++;
-                //    }
-                //    else
-                //    {
-                //        if (matchTT(keypattern, lut.TruthTable) == "1")
-                //            newMinterms.Add(tt_line, "1");
-                //    }
-                //}
-                count++;
-
-                lut.TruthTable = newMinterms;
-                lut.MinTruthTable = newMinterms;
-                lut.ContentSize = (int)Math.Pow(2.0, (double)lut.NumInputs);
-                LUTSizeCount[lut.NumInputs]++;
-                this.IsSecure = true;
-            }
-        }
-
         private void AddIncorrectKeys(string pattern, string correctKey, List<string> incorrectKeyPatterns, List<string> inputs, List<string> keybits, Dictionary<string, int> inputPositions, Dictionary<string, string> minterms, ref Dictionary<string, string> newMinterms)
         {
             if(matchTT(pattern, minterms) == "1")
@@ -1697,16 +1080,6 @@ namespace SecBLIF
                 if (CKT_LUTS[i].NumInputs >= MaxLUTSize)
                     continue;
 
-                //if (CKT_LUTS[i].NumInputs == 6)
-                //    CKT_LUTS[i].Weight += 40;
-
-                //if (CKT_LUTS[i].LUTinputs.Intersect(this.CKT_INPUTS).Count() == CKT_LUTS[i].NumInputs)
-                //    CKT_LUTS[i].Weight += 150;
-
-                //if (CKT_OUTPUTS.Contains(CKT_LUTS[i].LUToutput))
-                //    CKT_LUTS[i].Weight += 1500;
-
-                //CKT_LUTS[i].Weight += CKT_LUTS[i].LUTinputs.Intersect(CKT_INPUTS).Count();
 
                 for (int j = 0; j < CKT_LUTS.Count; j++)
                 {
@@ -1715,10 +1088,7 @@ namespace SecBLIF
                     // Weight determined by # of inputs driven by it's output 
                     if (CKT_LUTS[j].LUTinputs.Contains(CKT_LUTS[i].LUToutput))
                         CKT_LUTS[i].Weight++;
-                    
 
-                    //if (CKT_OUTPUTS.Contains(CKT_LUTS[j].LUToutput) && CKT_LUTS[j].LUTinputs.Contains(CKT_LUTS[i].LUToutput) || CKT_LUTS[i].NumInputs == 6)
-                    //    CKT_LUTS[i].Weight += 1500;
                 }
             }
 
@@ -1829,25 +1199,6 @@ namespace SecBLIF
                         sb.AppendFormat(".{0}(obfusoutputs{2}[{1}]), ", vector.Key, outputIndex++, moduleIndex);
                 }
 
-                /*
-                if (testOutputVectors.Contains(vector))
-                {
-                    if (vector.Key == output_vectors.Last().Key)
-                    {
-                        sb.AppendFormat(".{0} (outputs{2}[{1}]));", vector.Key, outputIndex++, moduleIndex);
-                    }
-
-                    else
-                        sb.AppendFormat(".{0}(outputs{2}[{1}]), ", vector.Key, outputIndex++, moduleIndex);
-                }
-                else
-                {
-                    if (vector.Key == output_vectors.Last().Key)
-                        sb.AppendFormat(".{0} (obfusoutputs{2}[{1}]));", vector.Key, outputIndex++, moduleIndex);
-                    else
-                        sb.AppendFormat(".{0}(obfusoutputs{2}[{1}]), ", vector.Key, outputIndex++, moduleIndex);
-                }
-                */
             }
 
             return sb.ToString();
@@ -2075,63 +1426,14 @@ namespace SecBLIF
                 string percentage = splitTemplate[1].Substring(0, 3);
                 tb.WriteLine("\tf{0} = $fopen(\"functionalMismatch_{1}_{2}.txt\", \"w\");", i + 1, CKT_NAME, percentage/*((i + 1) * 5).ToString("000")*/);
             }
-                
-            // tb.WriteLine("\tf = $fopen(\"functionalMismatch{0}.txt\", \"w\");", obfuscatedModule);
-            //     for(int i = 0; i < InstantiationTemplates.Count)
-            //tb.WriteLine("$fwrite(f, \"input, sk, mismatch\\n\");");
 
             tb.WriteLine("end");
 
             tb.WriteLine("initial begin");
             tb.WriteLine("\tfor(i = 0; i < MAX_COUNT; i = i +1) begin");
 
-           // tb.WriteLine("\t\tfor(l = 0; l < 10; l = l + 1) begin");
-
-           // for (int i = 0; i < InstantiationTemplates.Count; i++)
-           //     tb.WriteLine("\t\t\t$fscanf(rk{0}, \"%{1}b\", sk{0});", i + 1, SecretKeys[i]);
-
-           //// tb.WriteLine("\t\t\t#1;");
-
-           // for (int i = 0; i < InstantiationTemplates.Count; i++)
-           // {
-           //     tb.WriteLine("\t\t\tfor(j = 0; j < {0}; j = j + 1) begin", testOutputVectors.ElementAt(0).Value + 1);
-           //     tb.WriteLine("\t\t\t\tmismatchPercentage{0} = mismatchPercentage{0} + mismatch{0}[j];", i + 1);
-           //     tb.WriteLine("\t\t\tend");
-           // }
-           // //tb.WriteLine("\t\t\tfor(j = 0; j < {0}; j = j + 1) begin", testOutputVectors.ElementAt(0).Value + 1);
-           // //tb.WriteLine("\t\t\t\tmismatchPercentage = mismatchPercentage + mismatch[j];");
-           // //tb.WriteLine("\t\t\tend");
-
-           // for (int i = 0; i < InstantiationTemplates.Count; i++)
-           // {
-           //     tb.WriteLine("\t\t\tfor(k = 0; k < {0}; k = k + 1) begin", SecretKeys[i]);
-           //     tb.WriteLine("\t\t\t\tkeyPercentageCorrect{0} = keyPercentageCorrect{0} + (sk{0}[k] == correct_sk{0}[k]);", i + 1);
-           //     tb.WriteLine("\t\t\tend");
-           // }
-           // //tb.WriteLine("\t\t\tfor(k = 0; k < {0}; k = k + 1) begin", keyBits);
-           // //tb.WriteLine("\t\t\t\tkeyPercentageCorrect = keyPercentageCorrect + sk[k];");
-           // //tb.WriteLine("\t\t\tend");
-
-           // for (int i = 0; i < InstantiationTemplates.Count; i++)
-           //     tb.WriteLine("\t\t\tkeyPercentageCorrect{0} = keyPercentageCorrect{0} / {1};", i + 1, SecretKeys[i]);
-
-           // for (int i = 0; i < InstantiationTemplates.Count; i++)
-           //     tb.WriteLine("\t\t\tmismatchPercentage{0} = mismatchPercentage{0} / {1};", i + 1, testOutputVectors.ElementAt(0).Value + 1);
-
             tb.WriteLine("\t\t\t#1;");
-            //tb.WriteLine("\t\t$fwrite(f, \"%b, %f, %f\\n\", inputs, keyPercentageCorrect, mismatchPercentage);");
 
-            //for (int i = 0; i < InstantiationTemplates.Count; i++)
-            //    tb.WriteLine("\t\t\t$fwrite(f{0}, \"%f, %f\\n\", keyPercentageCorrect{0}, mismatchPercentage{0});", i + 1);
-
-            //for (int i = 0; i < InstantiationTemplates.Count; i++)
-            //    tb.WriteLine("\t\t\tmismatchPercentage{0} = 0;", i + 1);
-
-            //for (int i = 0; i < InstantiationTemplates.Count; i++)
-            //    tb.WriteLine("\t\t\tkeyPercentageCorrect{0} = 0;", i + 1);
-
-
-            //tb.WriteLine("\t\tend");
             tb.WriteLine("\t\tinputs = inputs + {0};", increment_amount);
             //tb.WriteLine("\t\t#1;");
             tb.WriteLine("\tend");
@@ -2368,62 +1670,12 @@ namespace SecBLIF
                 tb.WriteLine("\tf{0} = $fopen(\"functionalMismatch_{1}_{2}.txt\", \"w\");", i + 1, CKT_NAME, percentage/*((i + 1) * 5).ToString("000")*/);
             }
 
-            // tb.WriteLine("\tf = $fopen(\"functionalMismatch{0}.txt\", \"w\");", obfuscatedModule);
-            //     for(int i = 0; i < InstantiationTemplates.Count)
-            //tb.WriteLine("$fwrite(f, \"input, sk, mismatch\\n\");");
-
             tb.WriteLine("end");
 
             tb.WriteLine("initial begin");
             tb.WriteLine("\tfor(i = 0; i < MAX_COUNT; i = i +1) begin");
 
-            // tb.WriteLine("\t\tfor(l = 0; l < 10; l = l + 1) begin");
-
-            // for (int i = 0; i < InstantiationTemplates.Count; i++)
-            //     tb.WriteLine("\t\t\t$fscanf(rk{0}, \"%{1}b\", sk{0});", i + 1, SecretKeys[i]);
-
-            //// tb.WriteLine("\t\t\t#1;");
-
-            // for (int i = 0; i < InstantiationTemplates.Count; i++)
-            // {
-            //     tb.WriteLine("\t\t\tfor(j = 0; j < {0}; j = j + 1) begin", testOutputVectors.ElementAt(0).Value + 1);
-            //     tb.WriteLine("\t\t\t\tmismatchPercentage{0} = mismatchPercentage{0} + mismatch{0}[j];", i + 1);
-            //     tb.WriteLine("\t\t\tend");
-            // }
-            // //tb.WriteLine("\t\t\tfor(j = 0; j < {0}; j = j + 1) begin", testOutputVectors.ElementAt(0).Value + 1);
-            // //tb.WriteLine("\t\t\t\tmismatchPercentage = mismatchPercentage + mismatch[j];");
-            // //tb.WriteLine("\t\t\tend");
-
-            // for (int i = 0; i < InstantiationTemplates.Count; i++)
-            // {
-            //     tb.WriteLine("\t\t\tfor(k = 0; k < {0}; k = k + 1) begin", SecretKeys[i]);
-            //     tb.WriteLine("\t\t\t\tkeyPercentageCorrect{0} = keyPercentageCorrect{0} + (sk{0}[k] == correct_sk{0}[k]);", i + 1);
-            //     tb.WriteLine("\t\t\tend");
-            // }
-            // //tb.WriteLine("\t\t\tfor(k = 0; k < {0}; k = k + 1) begin", keyBits);
-            // //tb.WriteLine("\t\t\t\tkeyPercentageCorrect = keyPercentageCorrect + sk[k];");
-            // //tb.WriteLine("\t\t\tend");
-
-            // for (int i = 0; i < InstantiationTemplates.Count; i++)
-            //     tb.WriteLine("\t\t\tkeyPercentageCorrect{0} = keyPercentageCorrect{0} / {1};", i + 1, SecretKeys[i]);
-
-            // for (int i = 0; i < InstantiationTemplates.Count; i++)
-            //     tb.WriteLine("\t\t\tmismatchPercentage{0} = mismatchPercentage{0} / {1};", i + 1, testOutputVectors.ElementAt(0).Value + 1);
-
             tb.WriteLine("\t\t\t#1;");
-            //tb.WriteLine("\t\t$fwrite(f, \"%b, %f, %f\\n\", inputs, keyPercentageCorrect, mismatchPercentage);");
-
-            //for (int i = 0; i < InstantiationTemplates.Count; i++)
-            //    tb.WriteLine("\t\t\t$fwrite(f{0}, \"%f, %f\\n\", keyPercentageCorrect{0}, mismatchPercentage{0});", i + 1);
-
-            //for (int i = 0; i < InstantiationTemplates.Count; i++)
-            //    tb.WriteLine("\t\t\tmismatchPercentage{0} = 0;", i + 1);
-
-            //for (int i = 0; i < InstantiationTemplates.Count; i++)
-            //    tb.WriteLine("\t\t\tkeyPercentageCorrect{0} = 0;", i + 1);
-
-
-            //tb.WriteLine("\t\tend");
             tb.WriteLine("\t\tinputs = inputs + {0};", increment_amount);
             //tb.WriteLine("\t\t#1;");
             tb.WriteLine("\tend");
@@ -2544,66 +1796,6 @@ namespace SecBLIF
             }
 
             sw.WriteLine(".end");
-            sw.Close();
-        }
-
-        internal void WriteBench(string directory)
-        {
-            StreamWriter sw;
-            if (IsSecure)
-            {
-                sw = new StreamWriter(string.Format("{0}{1}_{2}.bench", directory, CKT_NAME, ((int)(100 * obfuscationPercentage)).ToString("000")));
-                sw.WriteLine("# Obfuscated {0} .bench file generated at {1}.", CKT_NAME, System.DateTime.Now);
-            }
-            else
-            {
-                sw = new StreamWriter(string.Format("{0}{1}.bench", directory, CKT_NAME));
-                sw.WriteLine("# Original {0} .bench file generated at {1}.", CKT_NAME, System.DateTime.Now);
-            }
-
-            foreach (string input in CKT_INPUTS)
-                sw.WriteLine("INPUT({0})", input);
-
-            if (IsSecure)
-            {
-                for (int i = 0; i < keyBits; i++)
-                    sw.WriteLine("INPUT(keyinput{0})", i);
-            }
-
-            foreach (string output in CKT_OUTPUTS)
-                sw.WriteLine("OUTPUT({0})", output);
-
-            foreach (LUT lut in CKT_LUTS.OrderBy(o => int.Parse(o.LUTID)))
-            {
-                var tt = lut.expandTruthTable();
-                var tt_hex = lut.BinToHex(tt);
-                StringBuilder sb = new StringBuilder();
-
-                sb.AppendFormat("{0}\t\t\t = LUT_0x{1} (", lut.LUToutput, tt_hex);
-
-                for (int i = 0; i < lut.LUTinputs.Count; i++)
-                {
-                    var input = lut.LUTinputs[i].Replace('[', '~').Replace(']', '~');
-                    var splt = input.Split('~');
-
-                    if (splt.Length > 1)
-                    {
-                        if (splt[0] == "sk")
-                            sb.AppendFormat("keyinput{0}", splt[1]);
-                    }
-                    else
-                    {
-                        sb.AppendFormat("{0}", lut.LUTinputs[i]);
-                    }
-
-                    if (i < lut.LUTinputs.Count - 1)
-                        sb.AppendFormat(", ");
-                }
-
-                sb.AppendFormat(")");
-                sw.WriteLine(sb.ToString());
-            }
-
             sw.Close();
         }
     }
