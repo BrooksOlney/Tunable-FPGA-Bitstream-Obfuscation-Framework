@@ -114,61 +114,6 @@ namespace SecBLIF
             LUTSizeCount[xLUT.NumInputs]++;
         }
 
-        internal string WriteBitstream(string filename)
-        {
-            Util.WriteInfo("Writing bitstream...", true);
-            DateTime start = DateTime.Now;
-            StringBuilder sb = new StringBuilder();
-            int name_start = filename.LastIndexOf("/") + 1;
-            if (name_start < 0) name_start = 0;
-            string mod_name = filename.Substring(name_start).Replace(".v", "").Replace(".dat", "");
-
-            //filename = filename.Insert(filename.LastIndexOf(".v"), "_bitstream");
-            //filename = filename.Replace(".v", ".dat");
-
-            if (IsSecure)
-            {
-                if (LUTsShareKey)
-                {
-                    filename = filename.Insert(filename.LastIndexOf("/") + 1, "ks_");
-                }
-                else
-                {
-                    filename = filename.Insert(filename.LastIndexOf("/") + 1, "ns_");
-                }
-            }
-
-            TextWriter w = new StreamWriter(filename);
-
-            if(IsSecure && embed_watermark)
-            {
-                StringBuilder sb2 = new StringBuilder();
-                TextWriter w2 = new StreamWriter(filename.Replace(".dat", "") + "_lutstruct.dat");
-
-                foreach(LUT xLUT in CKT_LUTS)
-                {
-                    sb2.Append(xLUT.NumInputs + ",");
-                }
-                sb2.Remove(sb2.Length - 1, 1);
-                w2.Write(sb2.ToString());
-                w2.Close();
-            }
-
-            foreach (LUT xLUT in CKT_LUTS)
-            {
-                sb.Append(xLUT.expandTruthTable());
-            }
-            w.Write(sb.ToString());
-
-            w.Close();
-
-            DateTime end = DateTime.Now;
-
-            var diff = end - start;
-            Util.WriteInfo(String.Format("Done. ({0:0.000} s)\n", diff.TotalSeconds), false);
-            return sb.ToString();
-        }
-
         internal Dictionary<string, int> parseVectors(List<string> nodes)
         {
             // assuming node names in form <text>~<index>~
@@ -297,17 +242,6 @@ namespace SecBLIF
 
             w.WriteLine("//reg [{0}:0] inputs;", CKT_INPUTS.Count - 1);
             w.WriteLine("//reg [{0}:0] outputs;", CKT_OUTPUTS.Count - 1);
-
-            //if (this.IsSecure)
-            //{
-            //    w.WriteLine("wire satwreck;");
-
-            //    w.Write("sat_module sat_resilience (.inputs({");
-            //    for (int i = 0; i < this.CKT_INPUTS.Count - 1; i++)
-            //        w.Write("{0}, ", CKT_INPUTS[i]);
-
-            //    w.Write("{0} }}), .keybits(sk[{1}:0]), .sat_out(satwreck));\n", CKT_INPUTS[CKT_INPUTS.Count - 1], CKT_INPUTS.Count - 1);
-            //}
 
 
             if (this.IsSecure)
@@ -481,52 +415,11 @@ namespace SecBLIF
                 w.WriteLine("endmodule");
             }
 
-            //if (IsSecure)
-            //{
-            //    w.Write("\n\n");
-            //    w.WriteLine("module sat_module (inputs, keybits, sat_out);");
-            //    w.WriteLine("\tparameter input_size = {0};", CKT_INPUTS.Count);
-            //    var tmp1 = sprng_key.Substring(sprng_key.Length - CKT_INPUTS.Count, CKT_INPUTS.Count).ToArray();
-            //    Array.Reverse(tmp1);
-            //    var tmp2 = new string(tmp1);
-
-            //    w.WriteLine("\tparameter correct_keybits = {0}'b{1};", CKT_INPUTS.Count, sprng_key.Substring(sprng_key.Length - CKT_INPUTS.Count, CKT_INPUTS.Count));
-            //    w.Write("\n");
-            //    w.WriteLine("\tinput wire [input_size - 1:0]inputs;");
-            //    w.WriteLine("\tinput wire [input_size - 1:0]keybits;");
-            //    w.WriteLine("\toutput wire sat_out;");
-            //    w.WriteLine("\tassign sat_out = (inputs == keybits) & (keybits != correct_keybits);");
-            //    w.WriteLine("endmodule");
-            //}
-
             w.Close();
             DateTime end = DateTime.Now;
 
             var diff = end - start;
             Console.WriteLine("Done. ({0:0.000} s)", diff.TotalSeconds);
-        }
-
-        
-        public static void NumericalSort(string[] ar)
-        {
-            Regex rgx = new Regex("([^0-9]*)([0-9]+)");
-            Array.Sort(ar, (a, b) =>
-            {
-                var ma = rgx.Matches(a);
-                var mb = rgx.Matches(b);
-                for (int i = 0; i < ma.Count; ++i)
-                {
-                    int ret = ma[i].Groups[1].Value.CompareTo(mb[i].Groups[1].Value);
-                    if (ret != 0)
-                        return ret;
-
-                    ret = int.Parse(ma[i].Groups[2].Value) - int.Parse(mb[i].Groups[2].Value);
-                    if (ret != 0)
-                        return ret;
-                }
-
-                return 0;
-            });
         }
 
         internal string GenerateHMAC()
@@ -612,132 +505,6 @@ namespace SecBLIF
                 GenerateTestBench(directory);
                 GenerateSecTestBench(directory);
             }
-        }
-
-        internal void MakeSecure(string directory)
-        {
-            DateTime start = DateTime.Now;
-            Util.WriteInfo("Securing BLIF file...", true);
-            LUTsShareKey = true;
-            IsSecure = true;
-
-            // hmac watermark variables
-            bool map_hmac = embed_watermark;
-            string hmac_tmp = HMAC;
-            int hmac_idx = 0;
-            StreamWriter hmac_statistics = new StreamWriter(directory + String.Format("{0}_hmac_statistics.txt", CKT_NAME));
-
-            if (embed_watermark)
-            {
-                hmac_statistics.WriteLine("HMAC Generated: {0}\n", hmac_tmp);
-            }
-
-            List<LUT> maxLUTs = new List<LUT>();
-            foreach (LUT lut in CKT_LUTS)
-            {
-                if (lut.NumInputs >= MaxLUTSize)
-                    maxLUTs.Add(lut);
-            }
-
-            foreach (LUT lut in maxLUTs)
-            {
-                if (CKT_LUTS.Contains(lut))
-                    CKT_LUTS.Remove(lut);
-            }
-
-            Random rand = new Random();
-            Random keybit = new Random();
-            int tmp = (int)(CKT_LUTS.Count * obfuscationPercentage);
-            int maxCutoff = CalculateSimilarity(tmp);
-           // List<List<LUT>> keybitsLUTs = new List<List<LUT>>();
-            PartitionLUTs(maxCutoff);
-
-
-            // to keep track of key placement, want to minimize observability of key bits
-            int[] keyIndexUsed = new int[128];
-            int numMaxSizeLUT = LUTSizeCount[MaxLUTSize];
-            
-            for (int i = 0; i < LUTSizeCount.Length; i++)
-            {
-                LUTSizeCount[i] = 0;
-            }
-
-            //int keyIndex = 0;
-            int obfuscationRange = 0;
-            if (obfuscationPercentage == 1)
-                obfuscationRange = PartitionedLUTs.Count;
-            else
-                obfuscationRange = PartitionedLUTs.Count - 1;
-
-            for(int i = 0; i < obfuscationRange; i++)
-            {
-                int range = getInputRange(PartitionedLUTs[i]);
-                int lutindex = rand.Next(0, range);
-                string bit_val = keybit.Next(0, 2).ToString();
-                string hmac_substring = "";
-
-                if (embed_watermark)
-                {
-                    var contentsize = PartitionedLUTs[i][0].ContentSize;
-                    if (contentsize > hmac_tmp.Length)
-                    {
-                        hmac_substring = hmac_tmp.PadRight(contentsize, '0');
-                        hmac_tmp = "";
-                        //map_hmac = false;
-                    }
-                    else
-                    {
-                        hmac_substring = hmac_tmp.Substring(0, contentsize);
-                        hmac_tmp = hmac_tmp.Remove(0, contentsize);
-                    }
-                }
-
-                for (int j = 0; j < PartitionedLUTs[i].Count; j++)
-                {
-                    if(PartitionedLUTs[i][j].NumInputs >= MaxLUTSize)
-                        LUTSizeCount[PartitionedLUTs[i][j].NumInputs]++;
-                    else
-                    {
-                        if (j == 0 && map_hmac)
-                        {
-                            PartitionedLUTs[i][j].AddWatermarkSubstring(bit_val, hmac_substring, keyBits, lutindex);
-                            hmac_statistics.WriteLine("{0},{1},{2}", PartitionedLUTs[i][j].LUTID, lutindex, bit_val);
-                            //hmac_statistics.WriteLine("HMAC Portion Written: {0}", hmac_substring);
-                            //hmac_statistics.WriteLine("LUT-ID Mapped: {0}", PartitionedLUTs[i][j].LUTID);
-                            //hmac_statistics.WriteLine("");
-
-                            if (hmac_tmp == "") map_hmac = false;
-                        }
-                        else
-                        {
-                            PartitionedLUTs[i][j].AddKeyInput(bit_val, lutindex, keyBits);
-                            LUTSizeCount[PartitionedLUTs[i][j].NumInputs]++;
-                        }
-                    }           
-                }
-                sprng_key += bit_val;
-                keyBits++;
-
-            }
-
-            // refill LUTSizeCount that was not obfuscated
-            for (int i = maxCutoff; i < CKT_LUTS.Count; i++)
-            {
-                LUTSizeCount[CKT_LUTS[i].NumInputs]++;
-            }
-
-            foreach(LUT lut in maxLUTs)
-            {
-                CKT_LUTS.Add(lut);
-                LUTSizeCount[lut.NumInputs]++;
-            }
-
-            //LUTSizeCount[MaxLUTSize] += numMaxSizeLUT; // add the original number of MaxLUTSize LUTs back in.
-            DateTime end = DateTime.Now;
-            var diff = end - start;
-           // SARLockDarkSilicon();
-            Console.WriteLine("Done. ({0:0.000} s)", diff.TotalSeconds);
-            hmac_statistics.Close();
         }
 
         internal int SARLockWholeCircuit1(int numinputs, int maxlutsize)
@@ -947,92 +714,6 @@ namespace SecBLIF
             return minterms;
         }
 
-        private void AddIncorrectKeys(string pattern, string correctKey, List<string> incorrectKeyPatterns, List<string> inputs, List<string> keybits, Dictionary<string, int> inputPositions, Dictionary<string, string> minterms, ref Dictionary<string, string> newMinterms)
-        {
-            if(matchTT(pattern, minterms) == "1")
-            {
-                foreach(string keypattern in incorrectKeyPatterns)
-                {
-                    bool isMatch = true;
-                    //if()
-                }
-            }
-        }
-
-        private string buildMinterm(string inputPattern, string keyPattern, List<string> inputs, List<string> keybits, Dictionary<string, int> inputPositions, Dictionary<string, string> minterms)
-        {
-            string ret = "";
-            string tt_output_val = matchTT(inputPattern, minterms);
-            
-
-            return ret;
-        }
-
-        private List<string> getIncorrectKeys(string correctKey)
-        {
-            List<string> ret = new List<string>();
-            StringBuilder sb = new StringBuilder();
-
-            for(int i = 0; i < correctKey.Length; i++)
-            {
-                sb.Append("".PadLeft(i, '-'));
-                sb.Append(correctKey[i] == '0' ? "1" : "0");
-                sb.Append("".PadRight(correctKey.Length - i - 1, '-'));
-                ret.Add(sb.ToString());
-                sb.Clear();
-            }
-
-            return ret;
-        }
-
-        private string matchTT(string pattern, Dictionary<string, string> tt)
-        {
-            string ret = "0";
-
-            foreach(KeyValuePair<string, string> tt_entry in tt)
-            {
-                bool isMatch = true;
-
-                for (int i = 0; i < tt_entry.Key.Length; i++)
-                {
-                    if (tt_entry.Key[i] == '-') continue;
-                    if (tt_entry.Key[i] != pattern[i]) isMatch = false;
-                }
-
-                if (isMatch)
-                {
-                    ret = tt_entry.Value;
-                    break;
-                }
-            }
-            return ret;
-        }
-
-        internal string[] ScrambleInputs(string[] inputs_orig)
-        {
-            Random rnd = new Random();
-
-            for(int i = inputs_orig.Length; i > 0; i--)
-            {
-                int j = rnd.Next(i);
-                string k = inputs_orig[j];
-                inputs_orig[j] = inputs_orig[i - 1];
-                inputs_orig[i - 1] = k;
-            }
-            return inputs_orig;
-        }
-
-        internal int getInputRange(List<LUT> chk)
-        {
-            int ret = 10000000;
-            for(int i = 0; i < chk.Count; i++)
-            {
-                if (chk[i].NumInputs < ret)
-                    ret = chk[i].NumInputs;
-            }
-            return ret;
-        }
-
         // generate similarity list for all LUTs subject to obfuscation
         internal int CalculateSimilarity(int maxCutoff)
         {
@@ -1163,12 +844,6 @@ namespace SecBLIF
                 {
                     sb.AppendFormat(".{0}({0}), ", vector.Key);
                 }
-                /*
-                if (testInputVectors.Contains(vector))
-                {
-                    sb.AppendFormat(".{0}({0}), ", vector);
-                }
-                */
                 else
                 {
                     sb.AppendFormat(".{0}(inputs[{1}]), ", vector.Key, inputIndex++);
@@ -1333,48 +1008,6 @@ namespace SecBLIF
 
             tb.WriteLine("/* END NETS */");
             tb.Write("\n");
-
-            //// WRITE INSTANTIATION FOR GOLDEN MODULE ------------------------------------------------------------
-            //tb.Write("{0} {0} (", goldenModule);
-
-            //int inputIndex = 0;
-            //foreach (KeyValuePair<string, int> vector in input_vectors)
-            //{
-            //    if (testInputVectors.Contains(vector))
-            //    {
-            //        tb.Write(".{0}({0}), ", vector.Value);
-            //    }
-            //    else
-            //    {
-            //        tb.Write(".{0}(inputs[{1}]), ", vector.Key, inputIndex++);
-            //    }
-            //}
-
-            //tb.Write("\n");
-
-            //int outputIndex = 0;
-            //foreach (KeyValuePair<string, int> vector in output_vectors)
-            //{
-            //    if (testOutputVectors.Contains(vector))
-            //    {
-            //        if (vector.Key == output_vectors.Last().Key)
-            //            tb.Write(".{0} (outputs[{1}]));", vector.Key, outputIndex++);
-            //        else
-            //            tb.Write(".{0}(outputs[{1}]), ", vector.Key, outputIndex++);
-            //    }
-            //    else
-            //    {
-            //        if (vector.Key == output_vectors.Last().Key)
-            //            tb.Write(".{0} (outputs[{1}]));", vector.Key, outputIndex++);
-            //        else
-            //            tb.Write(".{0}(outputs[{1}]), ", vector.Key, outputIndex++);
-            //    }
-            //}
-
-            //tb.Write("\n");
-            //tb.Write("\n");
-            //// END WRITE INSTANTIATION FOR GOLDEN MODULE ------------------------------------------------------------
-
 
             // WRITE INSTANTIATION FOR OBFUSCATED MODULE ------------------------------------------------------------
             for (int i = 0; i < InstantiationTemplates.Count; i++)
