@@ -198,7 +198,7 @@ def writeVerilog(filename, ckt, vot, manufacturer):
     vCode = []
 
     if ckt.secured:
-        vCode.append('// sk = {}\n'.format(ckt.obfKey[::-1]))
+        vCode.append('// sk = {}\n'.format(ckt.obfKey))
 
     vCode.append("`timescale 10ns/1ns\n")
     

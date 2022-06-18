@@ -31,7 +31,14 @@ class LUT:
             tt_line {str} -- Binary string representing input minterm
             output  {str} -- Binary 1/0 corresponding to min/max-term expression
         """
-        self.tt[tt_line] = output
+        if output == "0":
+            for i in range(self.contentSize):
+                ttLine = bin(i)[2:].zfill(self.numInputs)
+                if ttLine != tt_line and ttLine not in self.tt.keys():
+                    self.tt[ttLine] = "1"
+        else:
+            self.tt[tt_line] = output
+        
         self.isMinimised = False
 
     def addWatermarkSubstring(self, keybit, keyIdx, lutIdx, hmacSub):
@@ -180,7 +187,7 @@ class LUT:
                 
                 if output == "0": continue
                 
-                sop.append(genSOPline(self.inputs, ttEntry))
+                sop.append(self.genSOPline(self.inputs, ttEntry))
                 mintermCount += 1
 
                 if mintermCount < len(self.mintt):

@@ -10,8 +10,7 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "args" : ["-i", "F:\\Research\\Tunable_MUTARCH\\Python\\blifs\\VGAfinal.blif", 
-                "-vFiles", "F:\\Research\\Tunable_MUTARCH\\Python\\vga.v", "F:\\Research\\Tunable_MUTARCH\\Python\\vga_s.v", "-m", "altera", "-v", "lutprim"]
+            "args": ["-i", "F:\\Research\\abc\\pixel_rom.blif", "-vFiles", "pixel_rom.v", "pixel_rom_s.v", "-v", "comb", "-m", "altera", "-ks", "12", "-k", "000011101011", "-op", "0.10"],
         }
     ]
 }

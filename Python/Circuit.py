@@ -22,7 +22,8 @@ class circuit:
         self.latches  = latches
         self.secured  = False
         self.obfKey   = None
-        self.sizeLUT  = max(lut.numInputs for lut in LUTs)
+        # self.sizeLUT  = max(lut.numInputs for lut in LUTs)
+        self.sizeLUT  = 6
     
     def calculateWeights(self):
         """ Compute the "weight" of each LUT which is used as a heuristic for certain obfuscation functions. 

@@ -11,7 +11,7 @@ from Circuit import circuit
 import Utils
 
 class ObfuscationEngine:
-    def __init__(self, filename, vot, manufacturer, k=-1):
+    def __init__(self, filename, vot, manufacturer, ks=-1,k=None):
         """ ObfuscationEngine class constructor. This class serves as the top level - in terms of data/function operations.
             Use this class to parse BLIF files, perform obfuscation, and compile output files.
 
@@ -24,6 +24,7 @@ class ObfuscationEngine:
         self.cktObf = None
         self.vot    = vot
         self.man    = manufacturer
+        self.ks     = ks
         self.k      = k
 
     def __enter__(self):
@@ -68,11 +69,11 @@ class ObfuscationEngine:
 
         # partition the LUTs for obfuscation to prevent key explosion
         subCkt = [l for l in self.cktObf.luts if l.numInputs < self.ckt.sizeLUT][:obfRange]
-        lutParts = self.partitionLUTs(subCkt, 1)
+        lutParts = self.partitionLUTs(subCkt, 6)
 
         # generate random obfuscation key
-        keySize = self.k if self.k != -1 else len(lutParts)
-        obfKey = bin(random.randint(0,2**keySize - 1))[2:].zfill(keySize)
+        keySize = self.ks if self.ks != -1 else len(lutParts)
+        obfKey = self.k[::-1] if self.k != None else bin(random.randint(0,2**keySize - 1))[2:].zfill(keySize)[::-1]
 
         # distribute the key throughout the partitions, 1 bit per partition
         for keyIdx, part in enumerate(lutParts):
@@ -82,7 +83,7 @@ class ObfuscationEngine:
                 lut.addKeybit(obfKey[keyIdx], keyIdx, lutIdx)
 
         self.cktObf.secured = True
-        self.cktObf.obfKey  = ''.join(obfKey)
+        self.cktObf.obfKey  = ''.join(obfKey[::-1])
 
         end = t.time()        
         print("Finished obfuscating design in {0:4f}s.".format(end - start))
@@ -162,7 +163,7 @@ class ObfuscationEngine:
 def main(args):
 
     print(args)
-    with ObfuscationEngine(args.i, args.v, args.m, args.k) as oe:
+    with ObfuscationEngine(args.i, args.v, args.m, args.ks, args.k) as oe:
         
         oe.obfuscate(args.op)
         oe.writeVerilog(*args.vFiles)
@@ -181,9 +182,10 @@ if __name__ == "__main__":
     
     optional = ap.add_argument_group('optional arguments')
     optional.add_argument('-op', help="Percentage of design to obfuscate: -op {float(0.0, 1.0]}", type=float, default=1.0)
-    optional.add_argument('-sat', help="Implement SAT Attack resilience for the circuit: -sat")
+    # optional.add_argument('-sat', help="Implement SAT Attack resilience for the circuit: -sat")
     optional.add_argument('-blif', help="BLIF ouput filename: -blif {ckt_name.blif}")
-    optional.add_argument('-k', help="Desired size of the obfuscation key.", type=int, default=-1)
+    optional.add_argument('-ks', help="Desired size of the obfuscation key.", type=int, default=-1)
+    optional.add_argument('-k', help="Hardcoded key to provide (won't randomly generate a key)", default=None)
 
     args = ap.parse_args()
     main(args)
