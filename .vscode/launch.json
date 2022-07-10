@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "args": ["-i", "F:\\Research\\abc\\pixel_rom.blif", "-vFiles", "pixel_rom.v", "pixel_rom_s.v", "-v", "comb", "-m", "altera", "-ks", "12", "-k", "000011101011", "-op", "0.10"],
+            "args": ["-i", "Python/blifs/apex4.blif", "-vFiles", "Python/verilog/apex4.v", "Python/verilog/apex4_s.v", "-v", "comb", "-m", "altera", "-op", "0.10", "-blif", "1", "-opr", "0.05,0.10,0.05", "-sat", "1"],
         }
     ]
 }

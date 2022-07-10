@@ -24,6 +24,9 @@ class LUT:
     def __str__(self):
         return "inputs = {0}".format(self.getInputString())
     
+    def __repr__(self):
+        return f"LUT({self.inputs}, {self.output}, {self.tt})"
+    
     def addMinterm(self, tt_line, output):
         """ Add minterm expression to existing truth table (tt)
 

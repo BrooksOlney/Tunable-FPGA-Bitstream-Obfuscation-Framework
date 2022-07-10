@@ -1,6 +1,3 @@
-import time
-import random as rnd
-import numpy as np
 from LUT import LUT
 
 class circuit:
@@ -21,6 +18,7 @@ class circuit:
         self.luts     = LUTs
         self.latches  = latches
         self.secured  = False
+        self.obfP     = 0.0
         self.obfKey   = None
         # self.sizeLUT  = max(lut.numInputs for lut in LUTs)
         self.sizeLUT  = 6
@@ -37,4 +35,4 @@ class circuit:
         """ Returns an array of integers corresponding to the number of LUTs of that size.
             i.e. if arr[5] == 10, then there are 10 5-LUTs in the circuit
         """
-        return [sum(1 for lut in self.luts if lut.numInputs == i) for i in range(1, self.sizeLUT)]
+        return [sum(1 for lut in self.luts if lut.numInputs == i) for i in range(1, self.sizeLUT + 1)]

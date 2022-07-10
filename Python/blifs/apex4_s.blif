@@ -1,5 +1,6 @@
+# Locked with Key = 110110101000
 .model apex4
-.inputs i_0_ i_1_ i_2_ i_6_ i_7_ i_8_ i_3_ i_4_ i_5_ 
+.inputs i_0_ i_1_ i_2_ i_6_ i_7_ i_8_ i_3_ i_4_ i_5_ keyinput0 keyinput1 keyinput2 keyinput3 keyinput4 keyinput5 keyinput6 keyinput7 keyinput8 keyinput9 keyinput10 keyinput11
 .outputs o_1_ o_2_ o_3_ o_4_ o_5_ o_6_ o_7_ o_8_ o_9_ o_10_ o_11_ o_12_ o_13_ o_14_ o_15_ o_16_ o_17_ o_18_ 
 
 .names g82 o_1_
@@ -56,38 +57,49 @@
 .names g542 o_18_
 0 1
 
-.names i_0_ i_1_ i_2_ g1
-000 1
-010 1
-110 1
+.names i_0_ i_1_ keyinput1 i_2_ g1
+1101 1
+0101 1
+1001 1
+0001 1
+1100 1
+0100 1
+0000 1
+
+.names keyinput0 i_6_ i_7_ i_8_ g2
+0100 1
+1--1 1
+1-11 1
+
+.names i_3_ i_4_ keyinput3 i_5_ g3
+0110 1
+1-0- 1
+-10- 1
+
+.names keyinput9 g2 g3 g4
+011 1
+11- 1
+
+.names keyinput4 i_3_ i_4_ g5
 001 1
-101 1
+11- 1
+
+.names i_6_ i_7_ keyinput0 i_8_ g6
+1001 1
+--11 1
+
+.names g1 keyinput10 g6 g7
 011 1
-111 1
+-01 1
 
-.names i_6_ i_7_ i_8_ g2
-100 1
+.names i_6_ i_7_ keyinput3 i_8_ g8
+0111 1
+-10- 1
+--01 1
 
-.names i_3_ i_4_ i_5_ g3
-010 1
-
-.names g2 g3 g4
-11 1
-
-.names i_3_ i_4_ g5
-01 1
-
-.names i_6_ i_7_ i_8_ g6
-101 1
-
-.names g1 g6 g7
-01 1
-
-.names i_6_ i_7_ i_8_ g8
-011 1
-
-.names g8 g1 g9
-10 1
+.names keyinput10 g8 g1 g9
+110 1
+01- 1
 
 .names i_5_ g5 g7 g9 g10
 1110 1
@@ -95,29 +107,33 @@
 0111 1
 1111 1
 
-.names i_3_ i_4_ i_5_ g11
-000 1
-100 1
-010 1
-110 1
-101 1
-011 1
+.names i_3_ keyinput2 i_4_ i_5_ g11
+1011 1
+0011 1
+1001 1
+1010 1
+0010 1
+1000 1
+0000 1
+
+.names i_6_ i_7_ keyinput0 i_8_ g12
+0100 1
+-11- 1
+
+.names keyinput3 i_0_ i_1_ i_2_ g13
+1111 1
+1011 1
+1101 1
+1001 1
+1010 1
+1100 1
+1000 1
+0--1 1
+01-- 1
+
+.names keyinput5 i_7_ i_8_ g14
 111 1
-
-.names i_6_ i_7_ i_8_ g12
-010 1
-
-.names i_0_ i_1_ i_2_ g13
-000 1
-100 1
-010 1
-001 1
-101 1
-011 1
-111 1
-
-.names i_7_ i_8_ g14
-11 1
+0-1 1
 
 .names i_4_ i_5_ i_6_ g15
 110 1
@@ -145,62 +161,66 @@
 1001 1
 1101 1
 
-.names i_3_ i_4_ i_5_ g21
-000 1
-100 1
-010 1
-110 1
+.names i_3_ keyinput2 i_4_ i_5_ g21
+1011 1
+0011 1
+0001 1
+1010 1
+0010 1
+1000 1
+0000 1
+
+.names keyinput9 g21 g2 g22
 001 1
-011 1
 111 1
 
-.names g21 g2 g22
-01 1
+.names keyinput0 i_6_ i_7_ i_8_ g23
+0111 1
+0011 1
+0101 1
+0001 1
+0010 1
+0100 1
+0000 1
 
-.names i_6_ i_7_ i_8_ g23
+.names i_0_ keyinput1 i_1_ i_2_ g24
+1011 1
+1001 1
+0001 1
+1010 1
+0010 1
+1000 1
+0000 1
+
+.names keyinput1 i_0_ i_1_ i_2_ g25
+0111 1
+0011 1
+0101 1
+0001 1
+0110 1
+0100 1
+0000 1
+
+.names keyinput6 g11 g25 g26
 000 1
+
+.names i_0_ keyinput1 i_1_ i_2_ g27
+0011 1
+1001 1
+0001 1
+1010 1
+0010 1
+1000 1
+0000 1
+
+.names i_6_ keyinput0 i_7_ i_8_ g28
+1011 1
+11-- 1
+-1-1 1
+
+.names g28 keyinput6 g1 g29
 100 1
-010 1
-001 1
-101 1
-011 1
-111 1
-
-.names i_0_ i_1_ i_2_ g24
-000 1
-100 1
-010 1
-110 1
-001 1
-101 1
-111 1
-
-.names i_0_ i_1_ i_2_ g25
-000 1
-100 1
-110 1
-001 1
-101 1
-011 1
-111 1
-
-.names g11 g25 g26
-00 1
-
-.names i_0_ i_1_ i_2_ g27
-000 1
-100 1
-010 1
-110 1
-001 1
-101 1
-011 1
-
-.names i_6_ i_7_ i_8_ g28
-111 1
-
-.names g28 g1 g29
-10 1
+11- 1
 
 .names g11 g27 g21 g6 g29 g30
 00010 1
@@ -226,11 +246,12 @@
 01110 1
 11110 1
 
-.names i_3_ i_4_ i_5_ g32
-000 1
+.names i_3_ keyinput2 i_4_ i_5_ g32
+0000 1
 
-.names g24 g3 g33
-01 1
+.names g24 keyinput8 g3 g33
+011 1
+-01 1
 
 .names g11 g27 g6 g23 g32 g33 g34
 000000 1
@@ -259,29 +280,30 @@
 001111 1
 101111 1
 
-.names i_6_ i_7_ i_8_ g35
-000 1
+.names i_6_ i_7_ keyinput0 i_8_ g35
+0000 1
 
-.names i_3_ i_4_ i_5_ g36
-000 1
-010 1
-110 1
-001 1
-101 1
-011 1
-111 1
+.names i_3_ i_4_ keyinput2 i_5_ g36
+1101 1
+0101 1
+1001 1
+0001 1
+1100 1
+0100 1
+0000 1
 
-.names i_6_ i_7_ g37
-00 1
-
-.names i_3_ i_4_ i_5_ g38
-000 1
+.names keyinput5 i_6_ i_7_ g37
 100 1
-010 1
-110 1
-001 1
-101 1
-111 1
+01- 1
+
+.names i_3_ i_4_ keyinput2 i_5_ g38
+1101 1
+1001 1
+0001 1
+1100 1
+0100 1
+1000 1
+0000 1
 
 .names g11 g27 g2 g37 g38 g39
 00100 1
@@ -301,11 +323,14 @@
 0110 1
 1110 1
 
-.names g27 g35 g41
-01 1
+.names g27 keyinput10 g35 g41
+011 1
+10- 1
 
-.names i_0_ i_1_ i_2_ g42
-101 1
+.names i_0_ keyinput1 i_1_ i_2_ g42
+1001 1
+11-- 1
+-1-1 1
 
 .names g21 g28 g42 g43
 011 1
@@ -317,29 +342,33 @@
 0001 1
 1001 1
 
-.names i_3_ i_4_ i_5_ g45
+.names keyinput2 i_3_ i_4_ i_5_ g45
+0111 1
+0011 1
+0101 1
+0001 1
+0010 1
+0100 1
+0000 1
+
+.names keyinput9 g25 g45 g46
 000 1
-100 1
-010 1
-001 1
-101 1
+
+.names i_7_ keyinput5 i_8_ g47
 011 1
-111 1
+-01 1
 
-.names g25 g45 g46
-00 1
+.names i_6_ keyinput3 g47 g48
+011 1
+-01 1
 
-.names i_7_ i_8_ g47
-01 1
+.names g32 keyinput6 g13 g49
+100 1
+-11 1
 
-.names i_6_ g47 g48
-01 1
-
-.names g32 g13 g49
-10 1
-
-.names i_4_ i_5_ g50
-01 1
+.names keyinput4 i_4_ i_5_ g50
+001 1
+11- 1
 
 .names i_3_ i_0_ i_2_ g51
 010 1
@@ -399,17 +428,18 @@
 .names i_4_ i_5_ g57 g6 g58
 1111 1
 
-.names i_3_ i_4_ i_5_ g59
-000 1
-100 1
-010 1
-110 1
-001 1
-101 1
-011 1
+.names i_3_ i_4_ keyinput4 i_5_ g59
+0101 1
+1001 1
+0001 1
+1100 1
+0100 1
+1000 1
+0000 1
 
-.names i_6_ i_7_ g60
-11 1
+.names i_6_ keyinput5 i_7_ g60
+111 1
+10- 1
 
 .names g42 g58 g59 g13 g60 g61
 00000 1
@@ -429,11 +459,13 @@
 .names g40 g44 g53 g56 g61 g62
 11111 1
 
-.names i_7_ i_8_ g63
-00 1
-
-.names i_4_ i_5_ i_6_ g64
+.names keyinput5 i_7_ i_8_ g63
 100 1
+0-1 1
+
+.names i_4_ i_5_ keyinput4 i_6_ g64
+1000 1
+1-1- 1
 
 .names i_3_ i_0_ i_1_ g64 g65
 1101 1
@@ -476,11 +508,13 @@
 0110 1
 1110 1
 
-.names g25 g32 g70
-01 1
+.names keyinput10 g25 g32 g70
+101 1
+01- 1
 
-.names g42 g59 g71
-10 1
+.names g42 keyinput7 g59 g71
+110 1
+101 1
 
 .names g27 g28 g32 g37 g71 g72
 01100 1
@@ -495,14 +529,15 @@
 01111 1
 11111 1
 
-.names g11 g24 g73
-00 1
+.names g11 keyinput8 g24 g73
+010 1
+-01 1
 
 .names g6 g24 g32 g74
 101 1
 
-.names g24 g59 g75
-00 1
+.names keyinput6 g24 g59 g75
+000 1
 
 .names g23 g73 g74 g75 g76
 0000 1
@@ -511,8 +546,9 @@
 1001 1
 1101 1
 
-.names g25 g59 g77
-00 1
+.names keyinput7 g25 g59 g77
+100 1
+0-1 1
 
 .names g28 g2 g77 g33 g78
 0110 1
@@ -558,11 +594,14 @@
 01111 1
 11111 1
 
-.names g1 g38 g84
-00 1
+.names keyinput8 g1 g38 g84
+100 1
+01- 1
 
-.names i_4_ i_5_ i_6_ g85
-001 1
+.names i_4_ i_5_ keyinput4 i_6_ g85
+0001 1
+-111 1
+--11 1
 
 .names i_3_ i_0_ i_2_ g86
 111 1
@@ -580,8 +619,9 @@
 01111 1
 11111 1
 
-.names g42 g36 g88
-10 1
+.names g42 keyinput10 g36 g88
+110 1
+10- 1
 
 .names g23 g3 g29 g88 g89
 0110 1
@@ -601,8 +641,8 @@
 0110 1
 1110 1
 
-.names g36 g13 g91
-00 1
+.names g36 keyinput6 g13 g91
+000 1
 
 .names g42 g12 g3 g92
 111 1
@@ -630,11 +670,13 @@
 .names g27 g23 g32 g97
 001 1
 
-.names g24 g36 g98
-00 1
+.names g24 keyinput8 g36 g98
+010 1
+10- 1
 
-.names g25 g3 g99
-01 1
+.names keyinput9 g25 g3 g99
+001 1
+1-1 1
 
 .names g3 g13 g100
 10 1
@@ -684,10 +726,11 @@
 0110 1
 1110 1
 
-.names g24 g38 g105
-10 1
-01 1
-11 1
+.names keyinput8 g24 g38 g105
+111 1
+101 1
+110 1
+0-1 1
 
 .names g21 g25 g48 g105 g106
 0010 1
@@ -707,11 +750,13 @@
 .names g83 g87 g90 g93 g108 g109
 00111 1
 
-.names i_0_ i_1_ i_2_ g110
-001 1
+.names i_0_ keyinput1 i_1_ i_2_ g110
+0001 1
+-11- 1
 
-.names i_6_ i_7_ g111
-01 1
+.names i_6_ keyinput11 i_7_ g111
+011 1
+-01 1
 
 .names g36 g110 g111 g112
 011 1
@@ -764,8 +809,9 @@
 001111 1
 011111 1
 
-.names i_3_ i_5_ g116
-11 1
+.names keyinput4 i_3_ i_5_ g116
+011 1
+11- 1
 
 .names g13 g116 g117
 01 1
@@ -793,8 +839,9 @@
 .names i_3_ i_4_ g120
 11 1
 
-.names g28 g13 g121
-10 1
+.names g28 keyinput6 g13 g121
+100 1
+11- 1
 
 .names g42 g45 g6 g24 g3 g111 g122
 101010 1
@@ -813,8 +860,9 @@
 101111 1
 111111 1
 
-.names g50 g8 g123
-11 1
+.names keyinput11 g50 g8 g123
+111 1
+0-1 1
 
 .names g21 g2 g110 g124
 011 1
@@ -861,14 +909,16 @@
 01111 1
 11111 1
 
-.names i_0_ i_1_ g127
-11 1
+.names keyinput3 i_0_ i_1_ g127
+111 1
+0-1 1
 
 .names i_3_ i_4_ g127 g128
 101 1
 
-.names g42 g32 g129
-11 1
+.names keyinput9 g42 g32 g129
+011 1
+11- 1
 
 .names g28 g75 g37 g99 g129 g130
 00000 1
@@ -903,8 +953,10 @@
 .names g694 g122 g125 g132 g133
 1011 1
 
-.names i_4_ i_5_ i_6_ g134
-000 1
+.names i_4_ i_5_ keyinput11 i_6_ g134
+0010 1
+-10- 1
+--01 1
 
 .names i_3_ i_2_ g47 g134 g135
 1111 1
@@ -919,8 +971,9 @@
 101111 1
 111111 1
 
-.names i_7_ i_8_ g137
-10 1
+.names keyinput5 i_7_ i_8_ g137
+110 1
+0-1 1
 
 .names i_3_ i_0_ i_1_ g137 g85 g138
 00111 1
@@ -937,8 +990,9 @@
 01100 1
 11100 1
 
-.names g35 g24 g141
-10 1
+.names keyinput8 g35 g24 g141
+110 1
+0-1 1
 
 .names i_3_ g42 g8 g45 g141 g142
 01100 1
@@ -1055,8 +1109,9 @@
 .names g1 g59 g158
 00 1
 
-.names g21 g48 g159
-01 1
+.names g21 keyinput11 g48 g159
+011 1
+-01 1
 
 .names g42 g12 g84 g159 g160
 0110 1
@@ -1067,8 +1122,9 @@
 0111 1
 1111 1
 
-.names g11 g110 g161
-01 1
+.names keyinput7 g11 g110 g161
+101 1
+01- 1
 
 .names g28 g2 g24 g32 g161 g162
 01010 1
@@ -1202,8 +1258,9 @@
 101111 1
 111111 1
 
-.names g45 g110 g181
-01 1
+.names keyinput7 g45 g110 g181
+101 1
+0-1 1
 
 .names i_6_ i_7_ i_8_ g75 g181 g105 g182
 100000 1
@@ -1227,8 +1284,9 @@
 01111 1
 11111 1
 
-.names g59 g110 g184
-01 1
+.names keyinput7 g59 g110 g184
+101 1
+0-1 1
 
 .names g2 g23 g70 g184 g185
 1010 1
@@ -1314,8 +1372,9 @@
 .names i_3_ i_5_ g35 g42 g188
 1011 1
 
-.names g3 g110 g189
-11 1
+.names g3 keyinput7 g110 g189
+111 1
+10- 1
 
 .names i_6_ g63 g188 g181 g189 g190
 00000 1
@@ -1346,8 +1405,9 @@
 0111 1
 1111 1
 
-.names g21 g6 g194
-01 1
+.names g21 keyinput10 g6 g194
+011 1
+10- 1
 
 .names g8 g13 g181 g194 g195
 1010 1
@@ -1704,8 +1764,8 @@
 1001 1
 0101 1
 
-.names g25 g36 g243
-00 1
+.names keyinput9 g25 g36 g243
+000 1
 
 .names g63 g51 g134 g244
 111 1
@@ -1884,8 +1944,10 @@
 010111 1
 011111 1
 
-.names g27 i_6_ g47 g265
-001 1
+.names g27 keyinput11 i_6_ g47 g265
+0101 1
+-01- 1
+10-- 1
 
 .names g11 g12 g71 g265 g266
 0110 1
@@ -2670,8 +2732,9 @@
 0110 1
 1110 1
 
-.names g21 g110 g359
-01 1
+.names keyinput11 g21 g110 g359
+101 1
+01- 1
 
 .names i_6_ i_7_ i_8_ g73 g184 g359 g360
 001100 1
@@ -3516,8 +3579,10 @@
 .names g102 g208 g278 g40 g470 g471
 00011 1
 
-.names i_3_ i_0_ i_1_ g472
-000 1
+.names keyinput3 i_3_ i_0_ i_1_ g472
+1000 1
+011- 1
+01-- 1
 
 .names i_4_ i_6_ g4 g110 g472 g473
 00110 1
